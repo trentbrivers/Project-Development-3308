@@ -17,7 +17,7 @@ Create a README.md file for the repository and include the following:
 **Team/Product Name:** Not Applicable
 
 **Team members:** list the name, git username, and email for each member.
-- Ebrahim Azarisooreh
+- Ebrahim Azarisooreh (ebaz7868, ebaz7868@colorado.edu)
 - RJ Barrett
 - Dalvin Contreras
 - Rachel Mertz (RAMertz0630, rame4494@colorado.edu)
