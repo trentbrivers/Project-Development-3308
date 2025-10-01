@@ -21,7 +21,7 @@ Create a README.md file for the repository and include the following:
 - RJ Barrett
 - Dalvin Contreras
 - Rachel Mertz (RAMertz0630, rame4494@colorado.edu)
-- Trent Rivers
+- Trent Rivers (trentbrivers, trri1737@colorado.edu
 - Megan Yeung (meye7066, meye7066@colorado.edu)
 
 **Day/Time/TimeZone for the scheduled team weekly meeting (30 minutes via Zoom):**
