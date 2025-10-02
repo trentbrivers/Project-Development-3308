@@ -10,7 +10,7 @@ Create a GitHub repository with all team members as collaborators
 
 Create a README.md file for the repository and include the following:
 
-**Project title:** "Quiz Game That Is Definitely Not Jeopardy"
+**Project title:** "Quiz Game That Is Definitely Not Jeopardy - !Jeopardy"
 
 **Team # 5**
 
@@ -19,7 +19,7 @@ Create a README.md file for the repository and include the following:
 **Team members:** list the name, git username, and email for each member.
 - Ebrahim Azarisooreh (ebaz7868, ebaz7868@colorado.edu)
 - RJ Barrett (Roger-Barrett, roba5620@colorado.edu)
-- Darvin Contreras
+- Darvin Contreras (darvinco, daco6292@colorado.edu)
 - Rachel Mertz (RAMertz0630, rame4494@colorado.edu)
 - Trent Rivers (trentbrivers, trri1737@colorado.edu
 - Megan Yeung (meye7066, meye7066@colorado.edu)
@@ -27,9 +27,10 @@ Create a README.md file for the repository and include the following:
 **Day/Time/TimeZone for the scheduled team weekly meeting (30 minutes via Zoom):**
 Saturdays, 10:00 AM MT
 
-**Vision statement:** Want a fun way to play a trivia game asynchronously, against your friends? Want to compete against yourself and beat your best score? Come check out our new game platform!
+**Vision statement:** Want a fun way to play a trivia game asynchronously, against your friends? Want to compete against yourself and beat your best score? Come check out our new trivia game platform!
 
-**Motivation:** We’re a team with a diverse set of skills, backgrounds, and goals across the software development stack looking for a way to hone a variety of software development skills without needing to go deep into the weeds of a specific domain and are targeting a project whose scope can be scaled based on group progress. 
+**Motivation:** 
+We're a team of developers with diverse backgrounds, skill sets, and learning goals across the software development stack. This project - a Jeopardy-style game - gives us the opportunity to collaborate on something engaging while practicing real-world software development. Its flexible scope allows us to scale based on team progress and explore a variety of tools and techniques without being tied to a specific domain. 
 
 **Risks to project completion, possibly including:**
 1. Underestimate of the difficulty involved -> More difficult to implement/prototype along the spectrum of board games that we considered (e.g., tic-tac-toe -> checkers -> chess) than we originally expected.
@@ -37,7 +38,7 @@ Saturdays, 10:00 AM MT
    - User interface interactions
    - Game Flow Logic
    - DB + BE integration
-3.  New launguage(s) and working environment for most team members 
+3.  New launguage(s) and working environment for most team members
 
 **All risks from the directions are relevant:**
 1. No prior experience working with these team members.
