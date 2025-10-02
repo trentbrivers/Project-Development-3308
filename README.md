@@ -32,29 +32,29 @@ Saturdays, 10:00 AM MT
 **Motivation:** 
 We're a team of developers with diverse backgrounds, skill sets, and learning goals across the software development stack. This project - a Jeopardy-style game - gives us the opportunity to collaborate on something engaging while practicing real-world software development. Its flexible scope allows us to scale based on team progress and explore a variety of tools and techniques without being tied to a specific domain. 
 
-**Risks to project completion, possibly including:**
-1. Underestimate of the difficulty involved -> More difficult to implement/prototype along the spectrum of board games that we considered (e.g., tic-tac-toe -> checkers -> chess) than we originally expected.
+**Specific risks to project completion, possibly including:**
+1. Underestimation of the difficulty involved/ability to simplify -> We initially considered an online board game with a more obvious spectrum of prototypes/incremental designs (e.g., tic-tac-toe -> checkers -> chess). A working trivia game may be comparatively all-or-nothing.
 2. Unidentified integration challenges specifically
    - User interface interactions
    - Game Flow Logic
    - DB + BE integration
 3.  New launguage(s) and working environment for most team members
 
-**All risks from the directions are relevant:**
+**All general risks from the directions are also relevant:**
 1. No prior experience working with these team members.
 2. Potential lack of some needed resources or unfamiliarity with finding or accessing
 3. Less provided structure than some previous assignments/coursework
 
-**Additional risks:**
+**Additional logistical risks:**
 1. Team members fully remote.
 2. Distributed across 3 time zones which could complicate coordination. 
 3. Still in the forming/storming phases of team development.
 
 **Mitigation Strategy for above risks:**
-1. Modular project design we’ll start with a basic features minimum viable product (few rounds, simple head-to-head, minimal data scraped to create a small database) and scale as we go.
-2. Time investment early in the development for architecting the framework to identify potential integration challenges ahead of time. 
+1. Modular project design: we’ll start with a basic features minimum viable product (few rounds, simple head-to-head, minimal data scraped to create a small database) and scale as we go.
+2. Additional time investment: longer, synchronous meetings (1-2h instead of 15 min) during early development for architecting the framework to identify potential integration challenges ahead of time. 
 3. Avoid procrastination: start right away with basic features development and system architecting. 
-4. Early and prompt communication of issues amongst the group. 
+4. Early and prompt communication of issues amongst the group via a group text thread. 
 5. Already divided into areas of relative strength to get the first sprint off to a strong start:
     - DB: Rachel, RJ (float)
     - Back-end: Abe, RJ (float)
