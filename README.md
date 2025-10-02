@@ -19,7 +19,7 @@ Create a README.md file for the repository and include the following:
 **Team members:** list the name, git username, and email for each member.
 - Ebrahim Azarisooreh (ebaz7868, ebaz7868@colorado.edu)
 - RJ Barrett (Roger-Barrett, roba5620@colorado.edu)
-- Dalvin Contreras
+- Darvin Contreras
 - Rachel Mertz (RAMertz0630, rame4494@colorado.edu)
 - Trent Rivers (trentbrivers, trri1737@colorado.edu
 - Megan Yeung (meye7066, meye7066@colorado.edu)
@@ -71,5 +71,5 @@ Saturdays, 10:00 AM MT
   - Discussion of important priorities and planning for the next week of development. Also includes discussion of technical and personnel requirements and time estimates. 
   - Review of due outs and planned weekly development/tasks
 
-**Project Tracking Software link:** Jira
+**Project Tracking Software link (Jira):**  https://not-applicable.atlassian.net/jira/core/projects/NJ/board?filter=&groupBy=status&atlOrigin=eyJpIjoiNDAyOGNhY2YzMjE1NDA0MGI1NDcxMWVlODM0YzAzMzMiLCJwIjoiaiJ9
 
