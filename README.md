@@ -74,3 +74,6 @@ We're a team of developers with diverse backgrounds, skill sets, and learning go
 
 **Project Tracking Software link (Jira):**  https://not-applicable.atlassian.net/jira/core/projects/NJ/board?filter=&groupBy=status&atlOrigin=eyJpIjoiNDAyOGNhY2YzMjE1NDA0MGI1NDcxMWVlODM0YzAzMzMiLCJwIjoiaiJ9
 
+10/7/25:
+Minimum Viable Product User Experience Flow:
+![mvp_FLOW.jpeg](mvp_FLOW.jpeg)
