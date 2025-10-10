@@ -69,7 +69,7 @@ def submit_answer():
 
     # mock database call
     actual_answer = categories[game_state.category][game_state.question]
-    correct = user_answer.replace(' ', '').lower() == actual_answer.replace('', '').lower()
+    correct = user_answer.replace(' ', '').lower() == actual_answer.replace(' ', '').lower()
 
     new_game_state = GameState(
         timer=0 if correct else game_state.timer,
