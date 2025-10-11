@@ -19,6 +19,7 @@ class GameStatus(Enum):
 
 # mock front-end request template
 # curl -X POST -H "Content-type: application/json" -d "{\"category\": \"numbers\", \"timer\": 3, \"answer\": \"decimal\", \"question\": \"humans commonly do math and accounting with this system\", \"answer_status\": \"unanswered\", \"game_id\": 6692, \"game_status\": \"in_progress\"}" http://localhost:5000/submit_answer
+# NOTE: to run app --> flask --app core run --debug
 
 # mock game state, we can add more or delete as needed
 @dataclass
