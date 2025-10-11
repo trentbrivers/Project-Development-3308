@@ -3,3 +3,5 @@
 #### TEAM NOTE: for screenshots in markdown, please store and reference them from the ./img directory
 
 ## Weekly Status Updates
+
+#### Week of October 5, 2025
