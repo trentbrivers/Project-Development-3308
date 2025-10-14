@@ -2,7 +2,13 @@ import { useState } from 'react';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('title');
-  const [tiles, setTiles] = useState(Array(6).fill("$200"));
+  const [tiles, setTiles] = useState(
+    Array(30).fill("$200", 0, 6)
+      .fill("$400", 6, 12)
+      .fill("$600", 12, 18)
+      .fill("$800", 18, 24)
+      .fill("$1000", 24, 30)
+  );
 
   const handleStartGame = () => setCurrentScreen('board');
   const handleSelectQuestion = () => setCurrentScreen('question');
@@ -66,16 +72,70 @@ function GameBoard({ onSelectQuestion, tiles, setTiles }) {
     <Money value={tiles[4]} onMoneyClick={() => handleTileClick(4)}/>
     <Money value={tiles[5]} onMoneyClick={() => handleTileClick(5)}/>  
     </div>
+
+    <div className = "board-row">
+    <Money value={tiles[6]} onMoneyClick={() => handleTileClick(6)}/>
+    <Money value={tiles[7]} onMoneyClick={() => handleTileClick(7)}/>
+    <Money value={tiles[8]} onMoneyClick={() => handleTileClick(8)}/>
+    <Money value={tiles[9]} onMoneyClick={() => handleTileClick(9)}/>
+    <Money value={tiles[10]} onMoneyClick={() => handleTileClick(10)}/>
+    <Money value={tiles[11]} onMoneyClick={() => handleTileClick(11)}/>  
+    </div>
+
+    <div className = "board-row">
+    <Money value={tiles[12]} onMoneyClick={() => handleTileClick(12)}/>
+    <Money value={tiles[13]} onMoneyClick={() => handleTileClick(13)}/>
+    <Money value={tiles[14]} onMoneyClick={() => handleTileClick(14)}/>
+    <Money value={tiles[15]} onMoneyClick={() => handleTileClick(15)}/>
+    <Money value={tiles[16]} onMoneyClick={() => handleTileClick(16)}/>
+    <Money value={tiles[17]} onMoneyClick={() => handleTileClick(17)}/>  
+    </div>
+
+    <div className = "board-row">
+    <Money value={tiles[18]} onMoneyClick={() => handleTileClick(18)}/>
+    <Money value={tiles[19]} onMoneyClick={() => handleTileClick(19)}/>
+    <Money value={tiles[20]} onMoneyClick={() => handleTileClick(20)}/>
+    <Money value={tiles[21]} onMoneyClick={() => handleTileClick(21)}/>
+    <Money value={tiles[22]} onMoneyClick={() => handleTileClick(22)}/>
+    <Money value={tiles[23]} onMoneyClick={() => handleTileClick(23)}/>  
+    </div>
+
+    <div className = "board-row">
+    <Money value={tiles[24]} onMoneyClick={() => handleTileClick(24)}/>
+    <Money value={tiles[25]} onMoneyClick={() => handleTileClick(25)}/>
+    <Money value={tiles[26]} onMoneyClick={() => handleTileClick(26)}/>
+    <Money value={tiles[27]} onMoneyClick={() => handleTileClick(27)}/>
+    <Money value={tiles[28]} onMoneyClick={() => handleTileClick(28)}/>
+    <Money value={tiles[29]} onMoneyClick={() => handleTileClick(29)}/>  
+    </div>
+
     </>
   );
 }
 
 function QuestionScreen({ onBack }) {
+  const [answer, setAnswer] = useState(''); // store the player's input
+
+  const handleChange = (e) => {
+    setAnswer(e.target.value); // update state whenever the user types
+  };
+
+  const handleSubmit = () => {
+    console.log('User answer:', answer);
+    // You could also send this to a parent component here, e.g. via props
+    onBack();
+  };
+
   return (
     <div>
       <h3>Question: What is React?</h3>
-      <input type="text" placeholder="Your answer" />
-      <button onClick={onBack}>Back</button>
+      <input
+        type="text"
+        placeholder="Your answer"
+        value={answer}
+        onChange={handleChange}
+      />
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 }
