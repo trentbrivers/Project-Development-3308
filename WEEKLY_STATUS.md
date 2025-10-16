@@ -41,6 +41,14 @@ Trent drew a high-level sketch of the game's flow. He also added a
 front-end directory and started a corresponding Git branch.
 Front-end team had decided to use React to build our game's front-end.
 
+#### 10/5 Database updates (Rachel's update):
+Finished a draft entity relationship diagram suitable for implementation in any RDBMS software. Although this diagram was created in MySQL Workbench and has attribute datatypes that correspond to MySQL, I've decided to use SQLite for MVP implementation due to its portability and light requirements for database administration. The datatypes represented here are strings, integers, and booleans represented as integers, all of which are also supported in SQLite.
+
+<img width="824" height="756" alt="image" src="./img/SQL_ERD_v1.png" />
+
+The initial plan for this week was to proceed to scraping, uploading, and testing of Game_6692 to create a prototype database, but this work will be postponed to the 10/12 update due to time constraints.
+
+
 ### Week of October 12, 2025
 
 #### Trent's updates:
