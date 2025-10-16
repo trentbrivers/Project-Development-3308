@@ -41,9 +41,13 @@ Trent drew a high-level sketch of the game's flow. He also added a
 front-end directory and started a corresponding Git branch.
 Front-end team had decided to use React to build our game's front-end.
 
-![category_board.png](category_board.png)
+### Week of October 12, 2025
 
+#### Trent's updates:
+Implemented the main game flow in React. Upon opening the application, the user is presented with a Start Game screen. Upon clicking the button, the user is taken to the main game board. If the user clicks a tile, they are prompted with a question with an input box. The user input is taken in as a string in Javascript and printed to the console.  
+
+![category_board.png](category_board.png)
+#### Front-end
 Our game has a title screen with the !Jeopardy name and a 'Start Game'
 button. Experimenting with adding a background and modifying fonts of
-this page. Clicking the start button transitions to the category board 
-with dollar amounts on a functioning grid of buttons. 
+this page. 
