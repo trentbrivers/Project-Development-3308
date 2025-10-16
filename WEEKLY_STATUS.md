@@ -20,3 +20,24 @@ up to multiple questions. Plan is to utilize a dummy question/answer for testing
 
 <img width="1150" height="619" alt="image" src="https://github.com/user-attachments/assets/6037e9a1-24ed-48e4-aaa9-1088be44425b"/>
 
+
+#### Front-end
+
+![figma_screenshot.png](figma_screenshot.png)
+
+Darvin's Figma might not work out due to free trial limitations; 
+however, the mock-up from Figma might still be useful to refer to for 
+design ideas. 
+
+![mvp_FLOW.jpeg](mvp_FLOW.jpeg)
+
+Trent drew a high-level sketch of the game's flow. He also added a 
+front-end directory and started a corresponding Git branch.
+Front-end team had decided to use React to build our game's front-end.
+
+![category_board.png](category_board.png)
+
+Our game has a title screen with the !Jeopardy name and a 'Start Game'
+button. Experimenting with adding a background and modifying fonts of
+this page. Clicking the start button transitions to the category board 
+with dollar amounts on a functioning grid of buttons. 
