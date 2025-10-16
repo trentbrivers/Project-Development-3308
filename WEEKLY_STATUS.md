@@ -20,6 +20,12 @@ up to multiple questions. Plan is to utilize a dummy question/answer for testing
 
 <img width="1150" height="619" alt="image" src="https://github.com/user-attachments/assets/6037e9a1-24ed-48e4-aaa9-1088be44425b"/>
 
+#### 10/5 Ebrahim's updates:
+Added initial infrastructure using a flask service backend to communicate game state between the backend/DB and the frontend, in order to facilitate progress through the game as well as
+informed rendering for the frontend for clear separation of logic and duties. The template is currently stored in src/backend/core.py
+
+<img width="824" height="756" alt="image" src="https://github.com/user-attachments/assets/758ec574-9307-4034-9231-654b772622a5" />
+
 
 #### Front-end
 
