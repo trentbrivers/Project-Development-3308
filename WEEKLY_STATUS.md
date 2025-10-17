@@ -27,7 +27,7 @@ informed rendering for the frontend for clear separation of logic and duties. Th
 <img width="824" height="756" alt="image" src="https://github.com/user-attachments/assets/758ec574-9307-4034-9231-654b772622a5" />
 
 
-#### Front-end
+#### 10/5 Front-end Team Updates (Darvin, Megan, Trent)
 
 ![figma_screenshot.png](figma_screenshot.png)
 
@@ -55,7 +55,7 @@ The initial plan for this week was to proceed to scraping, uploading, and testin
 Implemented the main game flow in React. Upon opening the application, the user is presented with a Start Game screen. Upon clicking the button, the user is taken to the main game board. If the user clicks a tile, they are prompted with a question with an input box. The user input is taken in as a string in Javascript and printed to the console.  
 
 ![category_board.png](category_board.png)
-#### Front-end
+
 Our game has a title screen with the !Jeopardy name and a 'Start Game'
 button. Experimenting with adding a background and modifying fonts of
 this page. 
