@@ -1,7 +1,8 @@
 import os
 import sqlite3
 
-con = sqlite3.connect('notJeopardyDB.db')
+filepath = './src/db'
+con = sqlite3.connect(os.path.join(filepath, 'notJeopardyDB.db'))
 cur = con.cursor()
 
 # Cleanup actions - start w/ blank slate
