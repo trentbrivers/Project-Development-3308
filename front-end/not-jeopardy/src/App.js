@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
 export default function App() {
+  //React is a Single Page Application framework, so everything needs to be handled by this main App component function.
   const [currentScreen, setCurrentScreen] = useState('title');
+  // This is the main Array of tiles for the game board. It is a 1D array representing a 6x5 grid. 
   const [tiles, setTiles] = useState(
     Array(30).fill("$200", 0, 6)
       .fill("$400", 6, 12)
@@ -29,8 +31,7 @@ export default function App() {
   );
 }
 
-// Example components
-
+//This component presents the Title Screen consisting of 
 function TitleScreen({ onStart }) {
   return (
     <div>
@@ -122,7 +123,6 @@ function QuestionScreen({ onBack }) {
 
   const handleSubmit = () => {
     console.log('User answer:', answer);
-    // You could also send this to a parent component here, e.g. via props
     onBack();
   };
 
