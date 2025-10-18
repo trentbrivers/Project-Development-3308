@@ -44,11 +44,22 @@ def testQuestion(dbPath:Path, dbFilename:str):
     cur = con.cursor()
 
     # Positive Control: This should work & show rowid aliasing in action
-    PosCtrl = [('Testing', 100, 'Why are we doing this?', 'To test basic RI actions.'),
+    PosCtrl1 = [('Testing', 100, 'Why are we doing this?', 'To test basic RI actions.'),
                ('Birds', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")]
     
-    cur.executemany("INSERT INTO Question (Category, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?)", PosCtrl)
+    cur.executemany("INSERT INTO Question (Category, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?)", PosCtrl1)
     con.commit()
+
+    # This should also work - different questions can have the same answer
+    PosCtrl2 = ('Testing', 200, 'Why do we validate table constraints?', 'To test basic RI actions.')
+    cur.execute("INSERT INTO Question (Category, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?)", PosCtrl2)
+    con.commit()
+
+    # This should fail - violates uniqueness constraint
+    NegCtrl1 = ('Testing', 0, 'Why do we validate table constraints?', 'Broken DB logic is no fun.')
+    cur.execute("INSERT INTO Question (Category, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?)", NegCtrl1)
+    con.commit()
+
     con.close()
 
 def cleanupHelper(dbPath:Path, dbFilename:str, tbls:list=[]):
@@ -75,6 +86,9 @@ def cleanupHelper(dbPath:Path, dbFilename:str, tbls:list=[]):
     else:
         for tbl in tbls:
             cur.execute(f"DELETE FROM {tbl};")
+    
+    con.commit()
+    con.close()
 
 # QC after DDL
 print_tables(filePath, 'notJeopardyDB.db')
@@ -82,5 +96,5 @@ print_tables(filePath, 'notJeopardyDB.db')
 # DML and constraints QC here
 testQuestion(filePath, 'notJeopardyDB.db')
 print_rows(filePath, 'notJeopardyDB.db', ['Question'])
-# cleanupHelper(filePath, 'notJeopardyDB.db')
-# print_rows(filePath, 'notJeopardyDB.db', ['Question'])
+cleanupHelper(filePath, 'notJeopardyDB.db')
+print_rows(filePath, 'notJeopardyDB.db', ['Question'])
