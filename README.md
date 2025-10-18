@@ -76,4 +76,4 @@ We're a team of developers with diverse backgrounds, skill sets, and learning go
 
 10/7/25:
 Minimum Viable Product User Experience Flow:
-![mvp_FLOW.jpeg](mvp_FLOW.jpeg)
+![mvp_FLOW.jpeg](img/mvp_FLOW.jpeg)
