@@ -1,13 +1,12 @@
-import os
+from pathlib import Path
 import sqlite3
 
-filepath = './src/db'
+filePath = Path(__file__).parent.resolve()
 
-def print_tables(db_filename:str):
-    global filepath
-    file = os.path.join(filepath, db_filename) 
+def print_tables(dbPath:Path, dbFilename:str):
     
-    con = sqlite3.connect(db_filename)
+    dbPath = dbPath.joinpath(dbFilename) 
+    con = sqlite3.connect(dbPath)
     cur = con.cursor()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
 
@@ -22,13 +21,12 @@ def print_tables(db_filename:str):
         
         print ("")
 
-def print_rows(db_filename:str, tblnames:list):
+def print_rows(dbPath:Path, dbFilename:str, tblnames:list):
     """Helper function to check that test data inserted into
     the database displays correctly."""
-    global filepath
-    file = os.path.join(filepath, db_filename) 
     
-    con = sqlite3.connect(file)
+    dbPath = dbPath.joinpath(dbFilename) 
+    con = sqlite3.connect(dbPath) 
     cur = con.cursor()
 
     for tbl in tblnames:
@@ -38,12 +36,11 @@ def print_rows(db_filename:str, tblnames:list):
 
     con.close()
 
-def testQuestion(db_filename:str):
+def testQuestion(dbPath:Path, dbFilename:str):
     """Prototype tests for table Question"""
-    global filepath
-    file = os.path.join(filepath, db_filename) 
     
-    con = sqlite3.connect(file)
+    dbPath = dbPath.joinpath(dbFilename) 
+    con = sqlite3.connect(dbPath) 
     cur = con.cursor()
 
     # Positive Control: This should work & show rowid aliasing in action
@@ -51,7 +48,39 @@ def testQuestion(db_filename:str):
                ('Birds', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")]
     
     cur.executemany("INSERT INTO Question (Category, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?)", PosCtrl)
+    con.commit()
+    con.close()
 
-print_tables('notJeopardyDB.db')
-testQuestion('notJeopardyDB.db')
-print_rows('notJeopardyDB.db', ['Question'])
+def cleanupHelper(dbPath:Path, dbFilename:str, tbls:list=[]):
+    """Truncates the tables passed in parameter list.
+    If the default empty list is passed, all tables are
+    truncated."""
+
+    dbPath = dbPath.joinpath(dbFilename) 
+    con = sqlite3.connect(dbPath) 
+    cur = con.cursor()
+
+    if tbls == []:
+        cur.executescript("""
+                          BEGIN;
+                          DELETE FROM Contestant;
+                          DELETE FROM PlayerAnswer;
+                          DELETE FROM GameQuestion;
+                          DELETE FROM Player;
+                          DELETE FROM Question;
+                          DELETE FROM Game;
+                          COMMIT;
+                          """)
+    
+    else:
+        for tbl in tbls:
+            cur.execute(f"DELETE FROM {tbl};")
+
+# QC after DDL
+print_tables(filePath, 'notJeopardyDB.db')
+
+# DML and constraints QC here
+testQuestion(filePath, 'notJeopardyDB.db')
+print_rows(filePath, 'notJeopardyDB.db', ['Question'])
+# cleanupHelper(filePath, 'notJeopardyDB.db')
+# print_rows(filePath, 'notJeopardyDB.db', ['Question'])

@@ -1,8 +1,8 @@
-import os
+from pathlib import Path
 import sqlite3
 
-filepath = './src/db'
-con = sqlite3.connect(os.path.join(filepath, 'notJeopardyDB.db'))
+dbPath = Path(__file__).parent.resolve().joinpath('notJeopardyDB.db')
+con = sqlite3.connect(dbPath)
 cur = con.cursor()
 
 # Cleanup actions - start w/ blank slate
@@ -20,31 +20,28 @@ cur.executescript("""
 # Create tables and constraints de novo
 cur.executescript("""
     BEGIN;
-    CREATE TABLE IF NOT EXISTS Game(GameID INT,
+    CREATE TABLE IF NOT EXISTS Game(GameID INTEGER PRIMARY KEY,
                                     DisplayName VARCHAR(50) NOT NULL,
                                     StartDate DATETIME NOT NULL,
                                     EndDate DATETIME NOT NULL,
                                     IsCompleteGame CHAR(1),
-                                    IsCanceledGame CHAR(1),
-                                    CONSTRAINT GamePK PRIMARY KEY (GameID)
+                                    IsCanceledGame CHAR(1)
                                     );
     
-    CREATE TABLE IF NOT EXISTS Player(PlayerID INT,
+    CREATE TABLE IF NOT EXISTS Player(PlayerID INTEGER PRIMARY KEY,
                                       UserName VARCHAR(50) NOT NULL,
                                       TotalGamesPlayed INT NOT NULL,
                                       TotalGamesWon INT NOT NULL,
                                       TotalGamesRunnerUp INT NOT NULL,
                                       HighScore INT NOT NULL,
-                                      CONSTRAINT PlayerPK PRIMARY KEY (PlayerID),
                                       CONSTRAINT UniqueName UNIQUE (Username)
                                       );
                   
-    CREATE TABLE IF NOT EXISTS Question(QuestionID INT,
+    CREATE TABLE IF NOT EXISTS Question(QuestionID INTEGER PRIMARY KEY,
                                         Category VARCHAR(50) NOT NULL,
                                         PointValue INT NOT NULL,
                                         QuestionText VARCHAR(500) NOT NULL,
                                         QuestionAns VARCHAR(500) NOT NULL,
-                                        CONSTRAINT QuestionPK PRIMARY KEY (QuestionID),
                                         CONSTRAINT UniqueQ UNIQUE (QuestionText)
                                         );
                   
