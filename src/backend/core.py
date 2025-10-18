@@ -134,4 +134,4 @@ def get_idx(cat_idx, clue_idx):
     m, n = (5, 6)
     assert clue_idx < m and cat_idx < n
 
-    return cat_idx * m + clue_idx
+    return cat_idx * n + clue_idx
