@@ -127,3 +127,11 @@ def initialize_game():
 
     return jsonify(start_game_state)
 
+
+# just adding an indexer as code documentation for frontend's board-array indexing scheme
+def get_idx(cat_idx, clue_idx):
+    # we have six categories and five clues, so a 5 x 6 board
+    m, n = (5, 6)
+    assert clue_idx < m and cat_idx < n
+
+    return cat_idx * m + clue_idx
