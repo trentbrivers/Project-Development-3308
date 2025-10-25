@@ -59,3 +59,7 @@ Implemented the main game flow in React. Upon opening the application, the user 
 Our game has a title screen with the !Jeopardy name and a 'Start Game'
 button. Experimenting with adding a background and modifying fonts of
 this page. 
+
+#### Rachel's updates:
+
+Initiated database development on branch dbDev; basic implementation of all tables described in the ERD above complete. Column constraints implemented and tested for table Question, and a script successfully written, tested, and implemented to scrape all questions, answers, and point values for each round of Game_6692 into table Question, which can now be queried to test passing data through the stack. Next steps will be to fully implement and test all constraints for each of the remaining tables with more robust unit tests, and to work on database update actions (triggers).
