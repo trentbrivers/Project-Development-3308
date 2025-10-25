@@ -63,3 +63,7 @@ this page.
 #### Rachel's updates:
 
 Initiated database development on branch dbDev; basic implementation of all tables described in the ERD above complete. Column constraints implemented and tested for table Question, and a script successfully written, tested, and implemented to scrape all questions, answers, and point values for each round of Game_6692 into table Question, which can now be queried to test passing data through the stack. Next steps will be to fully implement and test all constraints for each of the remaining tables with more robust unit tests, and to work on database update actions (triggers).
+
+#### Ebrahim's updates:
+
+I updated the data classes definitions in the backend source to reflect that the "questions" and "answers" keys in the JSON definition are expected to be arrays.
