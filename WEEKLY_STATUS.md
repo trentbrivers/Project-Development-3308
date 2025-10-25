@@ -66,4 +66,4 @@ Initiated database development on branch dbDev; basic implementation of all tabl
 
 #### Ebrahim's updates:
 
-I updated the data classes definitions in the backend source to reflect that the "questions" and "answers" keys in the JSON definition are expected to be arrays.
+I updated the data class definitions in the backend source to reflect that the "questions" and "answers" keys in the JSON definition are expected to be arrays.
