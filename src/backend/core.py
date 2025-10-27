@@ -38,7 +38,7 @@ class GameState:
         self.timer = timer
         self.category = category
         self.questions = questions
-        self.answer = answers
+        self.answers = answers
         self.answer_status = answer_status
         self.game_status = game_status
         self.current_score = current_score
