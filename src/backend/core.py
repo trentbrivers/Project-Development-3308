@@ -37,7 +37,7 @@ class GameState:
     def __init__(self, timer, category, questions, answers, answer_status, game_status, current_score, game_id):
         self.timer = timer
         self.category = category
-        self.question = questions
+        self.questions = questions
         self.answer = answers
         self.answer_status = answer_status
         self.game_status = game_status
