@@ -117,7 +117,8 @@ def initialize_game():
                     ['a24', 'a25', 'a26', 'a27', 'a28', 'a29']]
 
     # Dummy placeholders for now
-    start_game_state = GameState(timer=1000, category='finance',
+    start_game_state = GameState(timer=1000,
+                                 category='finance',
                                  questions=mock_questions,
                                  answers=mock_answers,
                                  answer_status=AnswerStatus.UNANSWERED.value,
