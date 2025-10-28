@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 from dataclasses import dataclass
 from enum import Enum
 
 
 app = Flask(__name__)
+CORS(app)
 
 class AnswerStatus(Enum):
     CORRECT = "correct"
@@ -98,7 +100,7 @@ def submit_answer():
 #Initial function called to populate data on the frontend
 #Generates the game state for internal tracking and pushes
 #required information to frontend
-@app.route('/initialize_game', methods=['GET'])
+@app.route('/initialize_game', methods=['GET', 'OPTIONS'])
 def initialize_game():
     ### On initialize call to database to generate 30 questions (6 categories of 5 questions)  ###
 
