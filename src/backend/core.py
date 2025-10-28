@@ -100,7 +100,7 @@ def submit_answer():
 #Initial function called to populate data on the frontend
 #Generates the game state for internal tracking and pushes
 #required information to frontend
-@app.route('/initialize_game', methods=['GET', 'OPTIONS'])
+@app.route('/initialize_game', methods=['GET'])
 def initialize_game():
     ### On initialize call to database to generate 30 questions (6 categories of 5 questions)  ###
 
