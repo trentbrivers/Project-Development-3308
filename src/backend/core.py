@@ -134,3 +134,6 @@ def get_idx(row_idx, cat_idx):
     # we have six categories and five clues, so a 5 x 6 board
     limit_idx = 6
     return row_idx * limit_idx + cat_idx
+
+if __name__ == '__main__':
+    app.run(debug=True)
