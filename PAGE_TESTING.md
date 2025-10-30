@@ -26,7 +26,8 @@ This is the screen the player will see upon launching the game. It has the game'
 - onStart
 
 ### Data needed to render
-Image of game logo
+- Image of game logo
+- username
 
 ### Link destinations:
 onStart (to navigate to menu screen)
@@ -35,6 +36,7 @@ onStart (to navigate to menu screen)
 - title image renders correctly
 - "Start Game" appears
 - clicking start button changes the screen
+- does text input populate the text box
 
 ## 2) Main Menu
 
@@ -143,4 +145,24 @@ Player's score
 ### List of tests
 - Page renders correctly
 - Score has correct value
-- clicking "Menu" 
+- clicking "Menu" transfers back to the Main Menu
+
+## 6) Leaderboard
+
+![Leaderboard](img/leaderboardMockup.jpg)
+
+### Page Description
+This page displays the players with top scores accumulated across games. There is a button to return to the main menu. 
+
+### Parameters needed
+None
+
+### Data needed to render
+Top player usernames
+Top player scores
+
+### Link Destinations
+Main Menu button -> Main Menu
+
+### List of Tests
+- Do top players usernames and scores match manual database query
