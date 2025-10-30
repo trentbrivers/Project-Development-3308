@@ -16,32 +16,53 @@ Submit a link to your document in your repository. (one submission per team)
 
 ## 1) Title Screen
 
-![Title screenshot](img/title_screen_screenshot.png)
+![Title screenshot](img/title_screen_screenshot2.jpg)
 
 ### Page description 
-This is the screen the player will see upon launching the game. It has the game's name and a start button.
+This is the screen the player will see upon launching the game. It has the game's name, a textbox for Username, and an "Enter" button.
 
 ### Parameters needed
+- username
 - onStart
 
 ### Data needed to render
 Image of game logo
 
 ### Link destinations:
-onStart (to navigate to category screen)
+onStart (to navigate to menu screen)
 
 ### List of tests:
 - title image renders correctly
 - "Start Game" appears
 - clicking start button changes the screen
 
+## 2) Main Menu
 
-## 2) Category Screen
+![Main Menu](img/main_menu.jpg)
+
+### Page Description
+This is the main menu screen, which gives the player a couple of options to select from, including to start a game, view the leaderboard or alter the game settings.
+
+### Parameters Needed
+- startClick
+- leaderboardClick
+- settingsClick
+
+### Data needed to render
+Image of game logo
+
+### Link Destinations: 
+- startClick - Main Game
+- leaderboardClick - Leaderboard
+- settingsClick - Settings
+
+
+## 3) Main Game
 
 ![Category screenshot](img/category_board.png)
 
 ### Page description 
-This is the screen the player will see after clicking the start button on the Title Screen. A grid will be displayed in which there are 6 columns for categories, and 5 rows for each clue. The dollar amounts each clue is worth increases from top to bottom. Each cell is clickable.
+This is the screen the player will see after clicking the "Start Game" button on the Main Menu. A grid will be displayed in which there are 6 columns for categories, and 5 rows for each clue. The dollar amounts each clue is worth increases from top to bottom. Each cell is a button to click.
 
 ### Parameters needed
 - onSelectQuestion
@@ -57,32 +78,55 @@ onSelectQuestion (navigate to Question Screen)
 ### List of tests:
 - six categories in top row
 - 30 tiles appear (6x5 grid)
-- clicking a tile sets it to `null`?
+- clicking a tile sets it to `null`
 - clicking a tile changes the screen to the Question Screen
 
-## 3) Question Screen
+## 4) Question Screen
 
 ![Question screen](img/question_screenshot.png)
 
 ### Page description 
-This screen appears after the player selects a clue from the Category Screen. There is a text-box for them to enter their question, and there is a clickable submit button next to it.
+This screen appears after the player selects a clue from the Category Screen. There is a text-box for them to enter their answer and a clickable submit button next to it.
 
 ### Parameters needed
-onBack
+answerSubmit
 
 ### Data needed to render
 - Local state `answer`
 - Clue text
 
 ### Link destinations:
-onBack
+answerSubmit
 
 ### List of tests
 - text renders
 - input box appears and allows typing
-- clicking "Submit" button logs answer and returns player to Category screen
+- clicking "Submit" button stores the player input as a string (for validation by the backend) and transfers the player to the Answer validation screen
 
-## 4) Player's Score?
+## 4) Answer Screen 
+
+![Answer screen](img/answerMockup2.jpg)
+
+### Page Description
+This page shows the player either "Correct" or "Incorrect" with the answer to the question to the question and the player's current score. There is a single button which will return the user to the Main Game screen upon pressing. 
+
+### Parameters needed
+onClick
+
+### Data needed to render
+- Current Score
+- Answer to Question
+
+### Link Destinations:
+onClick - Main Game
+
+### List of Tests
+- Is player score accurate
+- Is the displayed answer accurate
+
+## 5) Game Over Screen
+
+![Game Over](img/finalScreen.jpg)
 
 ### Page description 
 This page shows the player their score once the game is finished.
@@ -94,21 +138,9 @@ score
 Player's score
 
 ### Link destinations
-- "next" button to navigate to Game Over screen
+- "Menu" button to navigate to Main Menu Screen
 
 ### List of tests
-
-
-## 5) Game Over screen?
-
-### Page description 
-This page shows the player that the game is finished
-
-### Parameters needed
-
-### Data needed to render
-Text for "Game Over" and/or "Thanks for playing!"
-
-### Link destinations
-
-### List of tests
+- Page renders correctly
+- Score has correct value
+- clicking "Menu" 
