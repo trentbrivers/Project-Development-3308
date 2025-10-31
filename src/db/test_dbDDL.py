@@ -20,14 +20,10 @@ class dbDDLTestCase(unittest.TestCase):
 
     # Implement a tearDown method that deletes the database that was created. Handle exceptions for a failed remove.
     def tearDown(self):
-        # db = 'test_db'
-        # dbPath = Path(__file__).parent.resolve().joinpath(db)
-
         # Delete DB test
         self.dbPath.unlink()
 
         # Check that file is gone, raise exception if not
-        # parentPath = dbPath.parent.resolve()
         if self.dbPath in list(self.parentPath.iterdir()):
             raise Exception('Database deletion failure; db {} still present in dir {}.'.format(self.dbPath.name, self.parentPath))
         
@@ -45,7 +41,9 @@ class dbDDLTestCase(unittest.TestCase):
         con.close()
     
     def test_dbDDL(self):
-        # - Validate table names
+        """Validates that the table names added to the sqlite_schema
+        catalog match the ERD."""
+        
         correctNames = {'Player', 'PlayerAnswer', 'Question', 'Contestant',
                     'Game', 'GameQuestion'}
         
