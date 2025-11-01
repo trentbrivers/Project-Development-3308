@@ -33,12 +33,17 @@ export default function App() {
 
 //This component presents the Title Screen consisting of 
 function TitleScreen({ onStart }) {
-  return (
-    <div>
-      <h1>!Jeopardy</h1>
-      <button onClick={onStart}>Start Game</button>
-    </div>
-  );
+    return (
+        <div className="title-screen">
+            <img
+                src="/notJeopardy-Logo.png"
+                alt="!Jeopardy Logo"
+            />
+            <button onClick={onStart} className="button-design" >
+                Start Game
+            </button>
+        </div>
+    );
 }
 
 function GameBoard({ onSelectQuestion, tiles, setTiles }) {

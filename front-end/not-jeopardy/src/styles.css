@@ -56,6 +56,21 @@ body {
   padding: 0;
 }
 
+.title-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: linear-gradient(#0B0D3A, #4704FA, #D92E8F, #FF8A00);
+    text-align: center;
+}
+
+.button-design {
+    background-color: #ffffff;
+    font-size: 50px;
+}
+
 .cat-tile {
   background: #2650db;
   border: 1px solid #999;
