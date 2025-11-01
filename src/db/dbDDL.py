@@ -47,10 +47,10 @@ def dbDDL(filePath: Path):
     
         CREATE TABLE IF NOT EXISTS Player(PlayerID INTEGER PRIMARY KEY,
                                           UserName VARCHAR(50) NOT NULL,
-                                          TotalGamesPlayed INT NOT NULL,
-                                          TotalGamesWon INT NOT NULL,
-                                          TotalGamesRunnerUp INT NOT NULL,
-                                          HighScore INT NOT NULL,
+                                          TotalGamesPlayed INT NOT NULL DEFAULT 0,
+                                          TotalGamesWon INT NOT NULL DEFAULT 0,
+                                          TotalGamesRunnerUp INT NOT NULL DEFAULT 0,
+                                          HighScore INT NOT NULL DEFAULT 0,
                                           CONSTRAINT UniqueName UNIQUE (Username)
                                           );
                   
@@ -65,7 +65,7 @@ def dbDDL(filePath: Path):
                   
         CREATE TABLE IF NOT EXISTS Contestant(GameID INT,
                                               PlayerID INT,
-                                              PlayerScore INT NOT NULL,
+                                              PlayerScore INT NOT NULL DEFAULT 0,
                                               CONSTRAINT GameContestFK FOREIGN KEY (GameID) REFERENCES Game (GameID)
                                                   ON DELETE CASCADE
                                                   ON UPDATE CASCADE,
