@@ -19,10 +19,6 @@ class GameStatus(Enum):
     IN_PROGRESS = "in_progress"
 
 
-# mock front-end request template
-# curl -X POST -H "Content-type: application/json" -d "{\"category\": \"numbers\", \"timer\": 3, \"answer\": \"decimal\", \"question\": \"humans commonly do math and accounting with this system\", \"answer_status\": \"unanswered\", \"game_id\": 6692, \"game_status\": \"in_progress\"}" http://localhost:5000/submit_answer
-# NOTE: to run app --> flask --app core run --debug
-
 # mock game state, we can add more or delete as needed
 @dataclass
 class GameState:
@@ -48,16 +44,25 @@ class GameState:
 
 #To do: Migrate question specific attributes from GameState to Question?
 @dataclass
-class Question:
-    question: str
-    question_value: int
-    answer: str
+class PlayerAnswer:
+    question_idx: int
+    user_answer: str
+    username: str
+
+    def __init__(self, question_idx, user_answer, username):
+        self.question_idx = question_idx
+        self.user_answer = user_answer
+        self.username = username
+
+
+@dataclass
+class PlayerStatus:
     answer_status: AnswerStatus
-    def __init__(self, question, question_value, answer, answer_status):
-        self.question = question
-        self.question_value = question_value
-        self.answer = answer
+    player_score: int
+
+    def __init__(self, answer_status, player_score):
         self.answer_status = answer_status
+        self.player_score = player_score
 
 
 @app.route('/submit_answer', methods=['POST'])
@@ -78,24 +83,14 @@ def submit_answer():
     }
 
     data = request.get_json()
-    game_state = GameState(**data)
-
-    if not data:
-        return jsonify({'error': 'Invalid request'})
-
-    user_answer = game_state.answer
+    player_answer = PlayerAnswer(**data)
+    user_answer = player_answer.user_answer
 
     # mock database call
-    actual_answer = categories[game_state.category][game_state.question]
-    correct = user_answer.replace(' ', '').lower() == actual_answer.replace(' ', '').lower()
+    # actual_answer = categories[game_state.category][game_state.question]
+    # correct = user_answer.replace(' ', '').lower() == actual_answer.replace(' ', '').lower()
 
-    new_game_state = GameState(timer=0 if correct else game_state.timer, category=game_state.category,
-                               questions=[], answers=[],
-                               answer_status=AnswerStatus.CORRECT.value if correct else AnswerStatus.INCORRECT.value,
-                               game_status=GameStatus.IN_PROGRESS.value, current_score=game_state.current_score,
-                               game_id=6692)
-
-    return jsonify(new_game_state)
+    return jsonify(PlayerStatus('incorrect', 200))
 
 #Initial function called to populate data on the frontend
 #Generates the game state for internal tracking and pushes
@@ -119,14 +114,16 @@ def initialize_game():
                     'a24', 'a25', 'a26', 'a27', 'a28', 'a29']
 
     # Dummy placeholders for now
-    start_game_state = GameState(timer=1000,
-                                 category='finance',
-                                 questions=mock_questions,
-                                 answers=mock_answers,
-                                 answer_status=AnswerStatus.UNANSWERED.value,
-                                 game_status=GameStatus.IN_PROGRESS.value,
-                                 current_score=0,
-                                 game_id=6692)
+    start_game_state = GameState(
+        timer=1000,
+        category='finance',
+        questions=mock_questions,
+        answers=mock_answers,
+        answer_status=AnswerStatus.UNANSWERED.value,
+        game_status=GameStatus.IN_PROGRESS.value,
+        current_score=0,
+        game_id=6692
+    )
 
     return jsonify(start_game_state)
 
