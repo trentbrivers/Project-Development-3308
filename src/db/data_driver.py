@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 import sqlite3
-from dbExtractGame import extract_game
+from src.db.dbExtractGame import extract_game
 
 
 filePath = Path(__file__).parent.resolve()
@@ -23,8 +23,7 @@ def print_rows(dbPath: Path, dbFilename: str, tblnames: list):
 def extract_questions_answers_array(dbPath: Path, dbFilename: str, tblnames: list):
     """ Function to extract questions and answers from the database """
     dbPath = dbPath.joinpath(dbFilename)
-    questions = []
-    answers = []
+    questions, answers, point_values = [], [], []
     con = sqlite3.connect(dbPath)
     cur = con.cursor()
 
@@ -39,13 +38,14 @@ def extract_questions_answers_array(dbPath: Path, dbFilename: str, tblnames: lis
     for tbl in tblnames:
         print(f'\n{tbl}:')
         res = cur.execute(f"SELECT * FROM {tbl};")
-        for row in res.fetchall():
-            questions.append(row[4])
-            answers.append(row[5])
+        for _question_idx, _category, _round, point_value, question, answer in res.fetchall():
+            point_values.append(point_value)
+            questions.append(question)
+            answers.append(answer)
 
     con.close()
 
-    return questions, answers
+    return questions, answers, point_values
 
 
 if __name__ == '__main__':
