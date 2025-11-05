@@ -11,12 +11,82 @@ export default function App() {
       .fill("$800", 18, 24)
       .fill("$1000", 24, 30)
   );
+  const [questions, setQuestions] = useState(
+    Array(61).fill(null)
+  );
+  const [answers, setAnswers] = useState(
+    Array(61).fill(null)
+  );
+  const [selected, setSelected] = useState(null);
+  const [score, setScore] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [totalSelected, setTotalSelected] = useState(0);
 
-  const handleStartGame = () => setCurrentScreen('board');
-  const handleSelectQuestion = () => setCurrentScreen('question');
+  const handleStartGame = () => {
+    fetch('http://localhost:5000/initialize_game', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // This returns a Promise that resolves to your JSON
+    })
+    .then(data => {
+      console.log('Backend response data:', data);
+      setQuestions(data['questions']);
+      setAnswers(data['answers']);
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
+    setCurrentScreen('board');
+  };
+
+  const handleSelectQuestion = (i) => {
+    const newTiles = tiles.slice();
+    newTiles[i] = null; 
+    setTiles(newTiles); 
+    setSelected(i);
+    setTotalSelected(totalSelected+1);
+    setCurrentScreen('question');
+  };
+
+  const handleSubmitAnswer = (answer) => {
+    const postData = {
+      "username": "Trent",
+      "question_idx":selected,
+      "user_answer": answer
+    }
+    fetch('http://localhost:5000/submit_answer',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }, 
+      body: JSON.stringify(postData)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // This returns a Promise that resolves to your JSON
+    })
+        .then(data => {
+      console.log('Backend response data:', data);
+      setScore(data['player_score']);
+      setStatus(data['answer_status']);
+
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
+    setCurrentScreen('answer');
+  };
   const handleReturnToBoard = () => setCurrentScreen('board'); 
-  const handleSubmitAnswer = () => setCurrentScreen('answer');
-  //const handleGameEnd = () => setCurrentScreen('finish');
+  const handleGameEnd = () => setCurrentScreen('finish');
 
   return (
     <div className="App">
@@ -24,27 +94,25 @@ export default function App() {
         <TitleScreen onStart={handleStartGame} />
       )}
       {currentScreen === 'board' && (
-        <GameBoard onSelectQuestion={handleSelectQuestion} tiles={tiles} setTiles = {setTiles}/>
+        <GameBoard onSelectQuestion={handleSelectQuestion} tiles={tiles}/>
       )}
       {currentScreen === 'question' && (
-        <QuestionScreen onBack={handleSubmitAnswer} />
+        <QuestionScreen onSubmit={handleSubmitAnswer} question={questions[selected]}/>
       )}
       {currentScreen === 'answer' && (
-        <AnswerScreen onReturn={handleReturnToBoard} />
+        <AnswerScreen onReturn={totalSelected < 30 ? handleReturnToBoard:handleGameEnd} answer={answers[selected]} answer_status={status} player_score={score}/>
       )}
+      {
+      currentScreen === 'finish' && (
+        <GameOver final_score={score}/>
+        )
+      }
     </div>
   );
 }
 
 //This component presents the Title Screen consisting of 
 function TitleScreen({ onStart }) {
-  fetch('http://localhost:5000/initialize_game',{
-    method: 'GET', 
-    headers: {
-      'Content-type': 'application/json'
-    }
-  })
-  .then(response => console.log('backend response:', response.json()))
     return (
         <div className="title-screen">
             <img
@@ -58,17 +126,11 @@ function TitleScreen({ onStart }) {
     );
 }
 
-function GameBoard({ onSelectQuestion, tiles, setTiles }) {
+function GameBoard({ onSelectQuestion, tiles}) {
 
-  function handleTileClick(index) {
-    // Logic to handle tile click, e.g., mark as answered
-    if (tiles[index] === null) return; // Already answered
-    const newTiles = tiles.slice();
-    newTiles[index] = null; // Mark as answered
-    console.log(`Tile ${index} clicked`);
-    console.log(newTiles);
-    setTiles(newTiles);
-    onSelectQuestion();
+  function handleClick(i){
+    if (tiles[i] === null) return;
+    onSelectQuestion(i);
   }
 
   return (
@@ -83,55 +145,55 @@ function GameBoard({ onSelectQuestion, tiles, setTiles }) {
     </div>
 
     <div className = "board-row">
-    <Money value={tiles[0]} onMoneyClick={() => handleTileClick(0)}/>
-    <Money value={tiles[1]} onMoneyClick={() => handleTileClick(1)}/>
-    <Money value={tiles[2]} onMoneyClick={() => handleTileClick(2)}/>
-    <Money value={tiles[3]} onMoneyClick={() => handleTileClick(3)}/>
-    <Money value={tiles[4]} onMoneyClick={() => handleTileClick(4)}/>
-    <Money value={tiles[5]} onMoneyClick={() => handleTileClick(5)}/>  
+    <Money value={tiles[0]} onMoneyClick={() => handleClick(0)}/>
+    <Money value={tiles[1]} onMoneyClick={() => handleClick(1)}/>
+    <Money value={tiles[2]} onMoneyClick={() => handleClick(2)}/>
+    <Money value={tiles[3]} onMoneyClick={() => handleClick(3)}/>
+    <Money value={tiles[4]} onMoneyClick={() => handleClick(4)}/>
+    <Money value={tiles[5]} onMoneyClick={() => handleClick(5)}/>  
     </div>
 
     <div className = "board-row">
-    <Money value={tiles[6]} onMoneyClick={() => handleTileClick(6)}/>
-    <Money value={tiles[7]} onMoneyClick={() => handleTileClick(7)}/>
-    <Money value={tiles[8]} onMoneyClick={() => handleTileClick(8)}/>
-    <Money value={tiles[9]} onMoneyClick={() => handleTileClick(9)}/>
-    <Money value={tiles[10]} onMoneyClick={() => handleTileClick(10)}/>
-    <Money value={tiles[11]} onMoneyClick={() => handleTileClick(11)}/>  
+    <Money value={tiles[6]} onMoneyClick={() => handleClick(6)}/>
+    <Money value={tiles[7]} onMoneyClick={() => handleClick(7)}/>
+    <Money value={tiles[8]} onMoneyClick={() => handleClick(8)}/>
+    <Money value={tiles[9]} onMoneyClick={() => handleClick(9)}/>
+    <Money value={tiles[10]} onMoneyClick={() => handleClick(10)}/>
+    <Money value={tiles[11]} onMoneyClick={() => handleClick(11)}/>  
     </div>
 
     <div className = "board-row">
-    <Money value={tiles[12]} onMoneyClick={() => handleTileClick(12)}/>
-    <Money value={tiles[13]} onMoneyClick={() => handleTileClick(13)}/>
-    <Money value={tiles[14]} onMoneyClick={() => handleTileClick(14)}/>
-    <Money value={tiles[15]} onMoneyClick={() => handleTileClick(15)}/>
-    <Money value={tiles[16]} onMoneyClick={() => handleTileClick(16)}/>
-    <Money value={tiles[17]} onMoneyClick={() => handleTileClick(17)}/>  
+    <Money value={tiles[12]} onMoneyClick={() => handleClick(12)}/>
+    <Money value={tiles[13]} onMoneyClick={() => handleClick(13)}/>
+    <Money value={tiles[14]} onMoneyClick={() => handleClick(14)}/>
+    <Money value={tiles[15]} onMoneyClick={() => handleClick(15)}/>
+    <Money value={tiles[16]} onMoneyClick={() => handleClick(16)}/>
+    <Money value={tiles[17]} onMoneyClick={() => handleClick(17)}/>  
     </div>
 
     <div className = "board-row">
-    <Money value={tiles[18]} onMoneyClick={() => handleTileClick(18)}/>
-    <Money value={tiles[19]} onMoneyClick={() => handleTileClick(19)}/>
-    <Money value={tiles[20]} onMoneyClick={() => handleTileClick(20)}/>
-    <Money value={tiles[21]} onMoneyClick={() => handleTileClick(21)}/>
-    <Money value={tiles[22]} onMoneyClick={() => handleTileClick(22)}/>
-    <Money value={tiles[23]} onMoneyClick={() => handleTileClick(23)}/>  
+    <Money value={tiles[18]} onMoneyClick={() => handleClick(18)}/>
+    <Money value={tiles[19]} onMoneyClick={() => handleClick(19)}/>
+    <Money value={tiles[20]} onMoneyClick={() => handleClick(20)}/>
+    <Money value={tiles[21]} onMoneyClick={() => handleClick(21)}/>
+    <Money value={tiles[22]} onMoneyClick={() => handleClick(22)}/>
+    <Money value={tiles[23]} onMoneyClick={() => handleClick(23)}/>  
     </div>
 
     <div className = "board-row">
-    <Money value={tiles[24]} onMoneyClick={() => handleTileClick(24)}/>
-    <Money value={tiles[25]} onMoneyClick={() => handleTileClick(25)}/>
-    <Money value={tiles[26]} onMoneyClick={() => handleTileClick(26)}/>
-    <Money value={tiles[27]} onMoneyClick={() => handleTileClick(27)}/>
-    <Money value={tiles[28]} onMoneyClick={() => handleTileClick(28)}/>
-    <Money value={tiles[29]} onMoneyClick={() => handleTileClick(29)}/>  
+    <Money value={tiles[24]} onMoneyClick={() => handleClick(24)}/>
+    <Money value={tiles[25]} onMoneyClick={() => handleClick(25)}/>
+    <Money value={tiles[26]} onMoneyClick={() => handleClick(26)}/>
+    <Money value={tiles[27]} onMoneyClick={() => handleClick(27)}/>
+    <Money value={tiles[28]} onMoneyClick={() => handleClick(28)}/>
+    <Money value={tiles[29]} onMoneyClick={() => handleClick(29)}/>  
     </div>
 
     </>
   );
 }
 
-function QuestionScreen({ onBack }) {
+function QuestionScreen({ onSubmit, question }) {
   const [answer, setAnswer] = useState(''); // store the player's input
 
   const handleChange = (e) => {
@@ -140,12 +202,12 @@ function QuestionScreen({ onBack }) {
 
   const handleSubmit = () => {
     console.log('User answer:', answer);
-    onBack();
+    onSubmit(answer);
   };
 
   return (
     <div>
-      <h3>Question: What is React?</h3>
+      <h3>Question: {question}</h3>
       <input
         type="text"
         placeholder="Your answer"
@@ -157,20 +219,28 @@ function QuestionScreen({ onBack }) {
   );
 }
 
-function AnswerScreen({ onReturn }) {
+function AnswerScreen({ onReturn, answer, answer_status, player_score }) {
     return (
       <div>
-      <h1>My Answer</h1>
-
+        <h1>Official Answer: {answer}</h1> <br></br>
+        <h2>{answer_status}</h2>
+        <p>{"$" + player_score}</p>
         <button onClick={onReturn} className="button-design" >
             Return to Game
         </button>
-        <p>$500</p>
+
       </div>
     );
 }
 
-//function GameOver({})
+function GameOver({final_score}) {
+  return (
+    <div>
+      <h1>CONGRATULATIONS!</h1>
+      <h2>Final Score: {final_score}</h2>
+    </div>
+  )
+}
 
 function Category ( {value} ) {
   return <div className="cat-tile">{value}</div>;
