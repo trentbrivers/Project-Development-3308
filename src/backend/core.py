@@ -72,7 +72,7 @@ def submit_answer():
     user_answer = player_answer.user_answer
 
     game_id = 6692 # should not be hard-coded
-    _questions, answers = game_data_dict[game_id]
+    _questions, answers, point_values = game_data_dict[game_id]
 
     actual_answer = answers[player_answer.question_idx]
     answer_status = AnswerStatus.INCORRECT.value
@@ -80,14 +80,14 @@ def submit_answer():
     if user_answer.replace(' ', '').lower() == actual_answer.replace(' ', '').lower():
         answer_status = AnswerStatus.CORRECT.value
 
-    return jsonify(PlayerStatus(answer_status, 200))
+    return jsonify(PlayerStatus(answer_status, point_values[player_answer.question_idx]))
 
 
 # Initialization function called to populate data on the frontend
 # Generates the game state for internal tracking and pushes required information to frontend
 @app.route('/initialize_game', methods=['GET'])
 def initialize_game():
-    questions, answers = data_driver.extract_questions_answers_array(
+    questions, answers, point_values = data_driver.extract_questions_answers_array(
         Path.cwd().parent.joinpath('db'),
         'notJeopardyDB.db',
         ['Question']
@@ -101,7 +101,7 @@ def initialize_game():
         game_id=6692
     )
 
-    game_data_dict.setdefault(game_state.game_id, (questions, answers))
+    game_data_dict.setdefault(game_state.game_id, (questions, answers, point_values))
 
     return jsonify(game_state)
 
