@@ -90,11 +90,10 @@ def submit_answer():
     # actual_answer = categories[game_state.category][game_state.question]
     # correct = user_answer.replace(' ', '').lower() == actual_answer.replace(' ', '').lower()
 
-    return jsonify(PlayerStatus('incorrect', 200))
+    return jsonify(PlayerStatus(AnswerStatus.CORRECT.value, 200))
 
-#Initial function called to populate data on the frontend
-#Generates the game state for internal tracking and pushes
-#required information to frontend
+# Initialization function called to populate data on the frontend
+# Generates the game state for internal tracking and pushes required information to frontend
 @app.route('/initialize_game', methods=['GET'])
 def initialize_game():
     ### On initialize call to database to generate 30 questions (6 categories of 5 questions)  ###
