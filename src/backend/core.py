@@ -5,6 +5,12 @@ from enum import Enum
 from pathlib import Path
 import src.db.data_driver as data_driver
 
+import os
+
+current_file_path = os.path.abspath(__file__)
+current_directory = os.path.dirname(current_file_path)
+current_dir_path = Path(current_directory)
+
 app = Flask(__name__)
 CORS(app)
 
@@ -88,7 +94,7 @@ def submit_answer():
 @app.route('/initialize_game', methods=['GET'])
 def initialize_game():
     questions, answers, point_values = data_driver.extract_questions_answers_array(
-        Path.cwd().parent.joinpath('db'),
+        current_dir_path.parent.joinpath('db'),
         'notJeopardyDB.db',
         ['Question']
     )
