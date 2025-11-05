@@ -1,8 +1,11 @@
+import os
+
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from dataclasses import dataclass
 from enum import Enum
-
+from pathlib import Path
+import src.db.data_driver as data_driver
 
 app = Flask(__name__)
 CORS(app)
@@ -42,6 +45,7 @@ class GameState:
         self.current_score = current_score
         self.game_id = game_id
 
+
 #To do: Migrate question specific attributes from GameState to Question?
 @dataclass
 class PlayerAnswer:
@@ -67,21 +71,6 @@ class PlayerStatus:
 
 @app.route('/submit_answer', methods=['POST'])
 def submit_answer():
-    # mock database
-
-    categories = {
-        'finance': {
-            'in value investing this is the most commonly used metric for finding intrinsic value':
-             'discounted cash flow',
-            'assets minus liabilities equal shareholders equity, also known as this ....': 'book value'
-        },
-        'numbers': {
-            'the system of numbers widely used in modern computing architecture': 'binary',
-            'the system of numbers used for managing permissions in linux file systems': 'octal',
-            'humans commonly do math and accounting with this system': 'decimal'
-        }
-    }
-
     data = request.get_json()
     player_answer = PlayerAnswer(**data)
     user_answer = player_answer.user_answer
@@ -112,12 +101,16 @@ def initialize_game():
                     'a18', 'a19', 'a20', 'a21', 'a22', 'a23',
                     'a24', 'a25', 'a26', 'a27', 'a28', 'a29']
 
+    questions, answers = data_driver.extract_questions_answers_array(Path.cwd().parent.joinpath('db'), 'notJeopardyDB.db', ['Question'])
+    print(questions)
+    print(answers)
+
     # Dummy placeholders for now
     start_game_state = GameState(
         timer=1000,
         category='finance',
-        questions=mock_questions,
-        answers=mock_answers,
+        questions=questions,
+        answers=answers,
         answer_status=AnswerStatus.UNANSWERED.value,
         game_status=GameStatus.IN_PROGRESS.value,
         current_score=0,
@@ -132,6 +125,7 @@ def get_idx(row_idx, cat_idx):
     # we have six categories and five clues, so a 5 x 6 board
     limit_idx = 6
     return row_idx * limit_idx + cat_idx
+
 
 if __name__ == '__main__':
     app.run(debug=True)

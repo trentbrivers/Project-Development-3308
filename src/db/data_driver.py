@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 import sqlite3
-from dbExtractGame import extract_game
+from src.db.dbExtractGame import extract_game
 
 
 filePath = Path(__file__).parent.resolve()
