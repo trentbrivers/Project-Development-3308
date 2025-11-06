@@ -2,6 +2,8 @@
 
 ![ERD](img/SQL_ERD_v2.png)
 
+
+# Table Descriptions
 ---
 ## 1) Table Question
 
@@ -111,3 +113,64 @@ This weak entity maps players (PlayerID) to the games (GameID) they have partici
 ### List of Unit Tests for Constraint Validation
 
 ### Data Access Methods
+---
+# Function Descriptions
+---
+## 1) extract_questions_answers_array
+
+### Description
+- This function is called from initialize_game and extracts question and answer array from the Table Question.  
+
+### Parameters
+- filePath to DB 
+- DB File
+- Table Name (Question)
+
+### Return Values
+- Question Array in 6 column x 5 row format
+- Answer Array in 6 column x 5 row format
+
+### Associated Tests
+- Game_6692
+
+## 2) update_highscore
+
+### Description
+- This function updates the Player Table upon the completion of a game. It creates an entry in the table if the playerid/username is not already present in the table and updates TotalGamesPlayed, TotalGamesWon, TotalGamesRunnerUp and HighScore.
+  
+### Parameters
+- Player Name - STRING
+- GameID - INT 
+- Score from the Game - INT 
+- win - BOOLEAN
+- runner_up - BOOLEAN
+  
+### Return Values
+- None
+  
+### Associated Tests
+- add_trentknowsall
+
+## 3) 
+### Description
+### Parameters
+### Return Values
+### Associated Tests
+
+## 4) 
+### Description
+### Parameters
+### Return Values
+### Associated Tests
+
+## 5) 
+### Description
+### Parameters
+### Return Values
+### Associated Tests
+
+## 6) 
+### Description
+### Parameters
+### Return Values
+### Associated Tests
