@@ -15,9 +15,6 @@ app = Flask(__name__)
 CORS(app)
 
 
-game_data_dict = dict()
-
-
 class AnswerStatus(Enum):
     CORRECT = "correct"
     INCORRECT = "incorrect"
@@ -33,22 +30,26 @@ class GameStatus(Enum):
 # mock game state, we can add more or delete as needed
 @dataclass
 class GameState:
+    game_idx: int
     timer: int                    # if timer > 0, we can still answer questions, otherwise time is up
+    scores: dict[str, int]     # list of player usernames and their scores
     questions: list[str]
     answers: list[str]
     game_status: GameStatus       # see GameStatus class for definition
     game_id: int                  # this is the ID tracking which !jeopardy game we're referencing
 
 
-    def __init__(self, timer, questions, answers, game_status, game_id):
+    def __init__(self, game_idx, timer, players, questions, answers, point_values, game_status, game_id):
+        self.game_idx = game_idx
         self.timer = timer
+        self.scores = players
         self.questions = questions
         self.answers = answers
+        self.point_values = point_values
         self.game_status = game_status
         self.game_id = game_id
 
 
-#To do: Migrate question specific attributes from GameState to Question?
 @dataclass
 class PlayerAnswer:
     question_idx: int
@@ -71,22 +72,33 @@ class PlayerStatus:
         self.player_score = player_score
 
 
+GAME_DATA: list[GameState] = []
+GAME_IDX: int = 0
+
+# Global map of username strings to an index in the GAME_DATA array
+PLAYER_DATA: dict[str, int] = {}
+
+
 @app.route('/submit_answer', methods=['POST'])
 def submit_answer():
-    data = request.get_json()
-    player_answer = PlayerAnswer(**data)
-    user_answer = player_answer.user_answer
+    player_answer = PlayerAnswer(**request.get_json())
+    global GAME_IDX
+    game_data = GAME_DATA[PLAYER_DATA[player_answer.username]]
 
-    game_id = 6692 # should not be hard-coded
-    _questions, answers, point_values = game_data_dict[game_id]
-
-    actual_answer = answers[player_answer.question_idx]
     answer_status = AnswerStatus.INCORRECT.value
 
-    if user_answer.replace(' ', '').lower() == actual_answer.replace(' ', '').lower():
+    if correct_answer(player_answer.user_answer, game_data.answers[player_answer.question_idx]):
         answer_status = AnswerStatus.CORRECT.value
+        game_data.scores[player_answer.username] += game_data.point_values[player_answer.question_idx]
+    else:
+        game_data.scores[player_answer.username] -= game_data.point_values[player_answer.question_idx]
 
-    return jsonify(PlayerStatus(answer_status, point_values[player_answer.question_idx]))
+    return jsonify(
+        PlayerStatus(
+            answer_status,
+            game_data.scores[player_answer.username]
+        )
+    )
 
 
 # Initialization function called to populate data on the frontend
@@ -99,17 +111,35 @@ def initialize_game():
         ['Question']
     )
 
+    global GAME_IDX
+
+    # this should be removed later and passed in as JSON input containing players-list from frontend
+    mock_players_list = ["trentr", "darvinc", "rachelm"]
+
     game_state = GameState(
-        timer=1000,
+        game_idx=GAME_IDX,
+        timer=10,
+        players=dict([(player, 0) for player in mock_players_list]),
         questions=questions,
         answers=answers,
+        point_values=point_values,
         game_status=GameStatus.IN_PROGRESS.value,
         game_id=6692
     )
 
-    game_data_dict.setdefault(game_state.game_id, (questions, answers, point_values))
+    GAME_DATA.append(game_state)
+
+    for player in mock_players_list:
+        if player not in PLAYER_DATA:
+            PLAYER_DATA[player] = GAME_IDX
+
+    GAME_IDX += 1
 
     return jsonify(game_state)
+
+
+def correct_answer(user_answer, actual_answer):
+    return user_answer.replace(' ', '').lower() == actual_answer.replace(' ', '').lower()
 
 
 # just adding an indexer as code documentation for frontend's board-array indexing scheme
