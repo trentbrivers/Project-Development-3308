@@ -8,7 +8,7 @@ def add_players(db_file: Path, usernames: list[str]):
 
         for username in usernames:
             cursor.execute(
-        '''
+            '''
                 INSERT INTO Player (UserName, TotalGamesPlayed, TotalGamesWon, TotalGamesRunnerUp, HighScore)
                 VALUES (?, ?, ?, ?, ?)
             ''', (username, 0, 0, 0, 0))
@@ -22,7 +22,7 @@ def update_player_score(db_file: Path, username: str, score):
         cursor = conn.cursor()
 
         cursor.execute(
-    '''
+        '''
             UPDATE Player
             SET HighScore = HighScore + ?
             WHERE UserName = ?
