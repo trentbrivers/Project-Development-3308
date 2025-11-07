@@ -28,7 +28,7 @@ def update_player_score(db_file: Path, username: str, score):
             WHERE UserName = ?
         ''', (score, username))
 
-        high_score = cursor.execute("SELECT HighScore FROM Player WHERE UserName = ?", (username,)).fetchone()[0]
+        high_score = cursor.execute("SELECT HighScore FROM Player WHERE UserName = ?", (username,)).fetchone()
 
         cursor.close()
         conn.commit()
