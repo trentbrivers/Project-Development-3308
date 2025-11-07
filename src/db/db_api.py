@@ -1,15 +1,8 @@
 import sqlite3 as sql
 from pathlib import Path
-from enum import Enum
-
-
-class ScoreUpdate(Enum):
-    INCREMENT = 0
-    DECREMENT = 1
 
 
 def add_players(db_file: Path, usernames: list[str]):
-    print(db_file)
     with sql.connect(db_file) as conn:
         cursor = conn.cursor()
 
@@ -24,24 +17,16 @@ def add_players(db_file: Path, usernames: list[str]):
         conn.commit()
 
 
-def update_player_score(db_file: Path, update_type: ScoreUpdate, username: str, score):
+def update_player_score(db_file: Path, username: str, score):
     with sql.connect(db_file) as conn:
         cursor = conn.cursor()
 
-        if update_type == ScoreUpdate.INCREMENT:
-            cursor.execute(
-            '''
-                UPDATE Player
-                SET HighScore = HighScore + ?
-                WHERE UserName = ?
-                ''', (score, username))
-        else:
-            cursor.execute(
-            '''
-                UPDATE Player
-                SET HighScore = HighScore - ?
-                WHERE UserName = ?
-                ''', (score, username))
+        cursor.execute(
+    '''
+            UPDATE Player
+            SET HighScore = HighScore + ?
+            WHERE UserName = ?
+        ''', (score, username))
 
         high_score = cursor.execute("SELECT HighScore FROM Player WHERE UserName = ?", (username,)).fetchone()[0]
 

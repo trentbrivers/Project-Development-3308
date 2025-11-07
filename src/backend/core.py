@@ -3,12 +3,11 @@ from flask_cors import CORS
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-import src.db.data_driver as data_driver
-from src.db.db_api import add_players, extract_questions_data, ScoreUpdate, update_player_score
+from src.db.db_api import add_players, extract_questions_data, update_player_score
+
 
 app = Flask(__name__)
 CORS(app)
-
 
 class AnswerStatus(Enum):
     CORRECT = "correct"
@@ -84,9 +83,9 @@ def submit_answer():
 
     if correct_answer(player_answer.user_answer, answers[player_answer.question_idx]):
         answer_status = AnswerStatus.CORRECT.value
-        high_score = update_player_score(db_file, ScoreUpdate.INCREMENT, player_answer.username, points[player_answer.question_idx])
+        high_score = update_player_score(db_file, player_answer.username, points[player_answer.question_idx])
     else:
-        high_score = update_player_score(db_file, ScoreUpdate.DECREMENT, player_answer.username, points[player_answer.question_idx])
+        high_score = update_player_score(db_file, player_answer.username, -1 * points[player_answer.question_idx])
 
     return jsonify(PlayerStatus(answer_status, high_score))
 
