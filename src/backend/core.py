@@ -75,7 +75,6 @@ class InitGameResponse:
         self.game_id = game_id
 
 
-
 # @app.route('/submit_answer', methods=['POST'])
 # def submit_answer():
 #     player_answer = PlayerAnswer(**request.get_json())

@@ -34,11 +34,13 @@ def extract_questions_data(db_file: Path):
         cursor = conn.cursor()
         res = cursor.execute("SELECT * FROM Question")
 
-        for _question_idx, category, _round, points, question, answer in res.fetchall():
-            categories.append(category)
+        for question_idx, category, _round, points, question, answer in res.fetchall():
             questions.append(question)
             answers.append(answer)
             point_values.append(points)
+
+            if 1 <= question_idx <= 6 or 31 <= question_idx <= 36 or question_idx == 61:
+                categories.append(category)
 
         cursor.close()
 
