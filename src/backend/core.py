@@ -1,16 +1,11 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 import src.db.data_driver as data_driver
-from src.db.db_api import add_players
+from src.db.db_api import add_players, extract_questions_data
 
-import os
-
-current_file_path = Path(__file__)
-current_directory = os.path.dirname(current_file_path)
-current_dir_path = Path(current_directory)
 
 app = Flask(__name__)
 CORS(app)
@@ -67,12 +62,12 @@ class InitGameResponse:
     game_status: GameStatus  # see GameStatus class for definition
     game_id: int  # this is the ID tracking which !jeopardy game we're referencing
 
-    def __init__(self, game_idx, timer, questions, answers, point_values, game_status, game_id):
+    def __init__(self, game_idx, timer, categories, questions, answers, game_status, game_id):
         self.game_idx = game_idx
         self.timer = timer
+        self.categories = categories
         self.questions = questions
         self.answers = answers
-        self.point_values = point_values
         self.game_status = game_status
         self.game_id = game_id
 
@@ -104,19 +99,16 @@ class InitGameResponse:
 @app.route('/initialize_game', methods=['POST'])
 def initialize_game():
     init_game_request = InitGameRequest(**request.get_json())
+    db_file = Path(__file__).absolute().parent.parent.joinpath('db/notJeopardyDB.db')
 
-    questions, answers, point_values = data_driver.extract_questions_answers_array(
-        current_dir_path.parent.joinpath('db'),
-        'notJeopardyDB.db',
-        ['Question']
-    )
+    categories, questions, answers, _points = extract_questions_data(db_file)
 
     init_game_response = InitGameResponse(
         game_idx=0,
         timer=10,
+        categories=categories,
         questions=questions,
         answers=answers,
-        point_values=point_values,
         game_status=GameStatus.IN_PROGRESS.value,
         game_id=6692
     )
