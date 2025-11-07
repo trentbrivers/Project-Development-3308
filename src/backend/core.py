@@ -77,7 +77,6 @@ class InitGameResponse:
 @app.route('/submit_answer', methods=['POST'])
 def submit_answer():
     player_answer = PlayerAnswer(**request.get_json())
-    # game_data = GAME_DATA[PLAYER_DATA[player_answer.username]]
     db_file = Path(__file__).absolute().parent.parent.joinpath('db/notJeopardyDB.db')
     _, _, answers, points = extract_questions_data(db_file)
 
@@ -117,13 +116,6 @@ def initialize_game():
 
 def correct_answer(user_answer, actual_answer):
     return user_answer.replace(' ', '').lower() == actual_answer.replace(' ', '').lower()
-
-
-# just adding an indexer as code documentation for frontend's board-array indexing scheme
-def get_idx(row_idx, cat_idx):
-    # we have six categories and five clues, so a 5 x 6 board
-    limit_idx = 6
-    return row_idx * limit_idx + cat_idx
 
 
 if __name__ == '__main__':
