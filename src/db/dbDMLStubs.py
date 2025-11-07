@@ -1,3 +1,5 @@
+# Execute `PRAGMA foreign_keys = ON` for all connections; https://sqlite.org/foreignkeys.html
+
 from pathlib import Path
 import sqlite3
 import sys
@@ -14,6 +16,7 @@ def Player_newUserSignup(dbFilePath, input):
     
     con = sqlite3.connect(dbFilePath)
     cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON;')
 
     # Get input into sqlite3 expected format
     values = (input,)
@@ -30,9 +33,48 @@ def Question_InsertRow(dbFilePath, input):
 
     con = sqlite3.connect(dbFilePath) 
     cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON;')
     
     cur.executemany("INSERT INTO Question (Round, Category, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?, ?)", input)
     con.commit()
 
     con.close()
+
+def Game_CreateNewGame(dbFilePath, username:str):
+    """Simulates the process of a signed-in user starting 
+    a new game. Under the hood, a new row is created in 
+    TABLE Game."""
+    # New row inserted into Game
+    con = sqlite3.connect(dbFilePath) 
+    cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON;')
+    
+    cur.execute('INSERT INTO Game DEFAULT VALUES;')
+    con.commit()
+
+    con.close()
+
+def Contestant_CreateNewContestant(dbFilePath, username:str):
+    """Continues the simulated the process of a signed-in user 
+    starting a new game. Under the hood, the unique PlayerID/GameID 
+    combo created Game_CreateNewGame is called becomes a new row in 
+    TABLE Contestant."""
+
+    con = sqlite3.connect(dbFilePath) 
+    cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON;')
+
+    # Subquery to get the PlayerID
+    UserID = cur.execute("SELECT PlayerID FROM Player WHERE UserName = ?;", (username,)).fetchone()[0]
+    # Subquery to get the GameID
+    # How do I know what Game I just created? 
+    # Would bundling CreateNewGame and CreateNewContestant in a TRANSACTION guarantee this is right?
+    GameID = cur.execute("SELECT MAX(GameID) FROM Game;").fetchone()[0]
+    # Main Query: Create a new row in Contestant
+    cur.execute("INSERT INTO Contestant (GameID, PlayerID) VALUES (?, ?)", (UserID, GameID))
+    con.commit()
+
+    con.close()
+    
+
     

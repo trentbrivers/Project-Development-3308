@@ -32,13 +32,14 @@ This strong entity contains one entry for each unique game instantiated by one o
 
 ### Attributes (incl. column & table constraints, where applicable)
 - GameID INTEGER PRIMARY KEY
-- DisplayName VARCHAR(50) NOT NULL
-- StartDate DATETIME NOT NULL
-- EndDate DATETIME NOT NULL
-- IsCompleteGame CHAR(1)
-- IsCanceledGame CHAR(1)
+- DisplayName VARCHAR(50) NOT NULL DEFAULT ('Game ' || strftime('%Y-%m-%d %H:%M:%S', 'now'))
+- StartDate DATETIME NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now'))
+- EndDate DATETIME
+- IsCompleteGame CHAR(1) DEFAULT 'N'
+- IsCanceledGame CHAR(1) DEFAULT 'N'
 
 ### List of Unit Tests for Constraint Validation
+- test_Game_CreateNewGame
 
 ### Data Access Methods
 
@@ -113,6 +114,7 @@ This weak entity maps players (PlayerID) to the games (GameID) they have partici
 - CONSTRAINT PlayerConstestFK FOREIGN KEY (PlayerID) REFERENCES Player (PlayerID) ON DELETE CASCADE ON UPDATE CASCADE
 
 ### List of Unit Tests for Constraint Validation
+- test_Game_CreateNewContestant
 
 ### Data Access Methods
 ---

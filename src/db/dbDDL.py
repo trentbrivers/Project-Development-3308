@@ -35,14 +35,16 @@ def dbDDL(filePath: Path):
     con = sqlite3.connect(filePath)
     cur = con.cursor()
 
+    # Put CHECK NOT NULL CONSTRAINT on EndDate of completed game in Game?
+    # Put CHECK IsX = 'Y' or 'N'?
     cur.executescript("""
         BEGIN;
         CREATE TABLE IF NOT EXISTS Game(GameID INTEGER PRIMARY KEY,
-                                        DisplayName VARCHAR(50) NOT NULL,
-                                        StartDate DATETIME NOT NULL,
-                                        EndDate DATETIME NOT NULL,
-                                        IsCompleteGame CHAR(1),
-                                        IsCanceledGame CHAR(1)
+                                        DisplayName VARCHAR(50) NOT NULL DEFAULT ('Game ' || strftime('%Y-%m-%d %H:%M:%S', 'now')),
+                                        StartDate DATETIME DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now')),
+                                        EndDate DATETIME,
+                                        IsCompleteGame CHAR(1) DEFAULT 'N',
+                                        IsCanceledGame CHAR(1) DEFAULT 'N'
                                         );
     
         CREATE TABLE IF NOT EXISTS Player(PlayerID INTEGER PRIMARY KEY,
@@ -89,7 +91,7 @@ def dbDDL(filePath: Path):
                                                 GameID INT,
                                                 QuestionID INT,
                                                 AnswerText VARCHAR(500) NOT NULL,
-                                                IsCorrect CHAR(1) NOT NULL,
+                                                IsCorrect CHAR(1),
                                                 CONSTRAINT AnsweringPlayerFK FOREIGN KEY (PlayerID) REFERENCES Player (PlayerID)
                                                     ON DELETE CASCADE
                                                     ON UPDATE CASCADE,

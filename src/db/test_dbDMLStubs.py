@@ -1,3 +1,5 @@
+# Execute `PRAGMA foreign_keys = ON` for all connections; https://sqlite.org/foreignkeys.html
+
 import dbDDL
 import dbDMLStubs
 from pathlib import Path
@@ -21,6 +23,7 @@ class dbDMLStubsTestCase(unittest.TestCase):
         # Open a connection to query the db
         self.con = sqlite3.connect(self.dbPath)
         self.cur = self.con.cursor()
+        self.cur.execute('PRAGMA foreign_keys = ON;')
 
     # Implement a tearDown method that deletes the database that was created. Handle exceptions for a failed remove.
     def tearDown(self):
@@ -119,3 +122,37 @@ class dbDMLStubsTestCase(unittest.TestCase):
         #     with self.subTest(i=NegCtrl2.index(test)):
         #         with self.assertRaises(sqlite3.OperationalError):
         #             dbDMLStubs.Question_InsertRow(self.dbPath, test)
+
+    def test_Game_CreateNewGame(self):
+        user = 'testName'
+        
+        # Positive Control: This should work & show INSERT... DEFAULT VALUES in action
+        rowCtBefore = len(self.cur.execute("SELECT * FROM Game;").fetchall())
+        dbDMLStubs.Game_CreateNewGame(self.dbPath, user)
+        rowCtAfter = len(self.cur.execute("SELECT * FROM Game;").fetchall())
+        self.assertEqual(rowCtBefore + 1, rowCtAfter, msg='A single row was not added to TABLE Game.')
+
+
+    def test_Contestant_CreateNewContestant(self):
+        user = 'testName'
+        
+        # Positive Control: This should work & show foreign keys in action
+        # Tables Player, Game must have valid PKs to reference
+        dbDMLStubs.Player_newUserSignup(self.dbPath, user)
+        dbDMLStubs.Game_CreateNewGame(self.dbPath, user)
+        dbDMLStubs.Contestant_CreateNewContestant(self.dbPath, user)
+        
+        expect = [(1, 1, 0)]
+        result = self.cur.execute("SELECT * FROM Contestant;").fetchall()
+        self.assertEqual(expect, result, msg='Error; expect foreign keys & default value to match {}.'.format(expect))
+
+        # Confirm that invalid FK references throw IntegrityError
+        invalidFKs = [(1, 2), 
+                      (2, 1)]
+        for test in invalidFKs:
+            with self.subTest(i=invalidFKs.index(test)):
+                with self.assertRaises(sqlite3.IntegrityError):
+                    self.cur.execute("""INSERT INTO Contestant (GameID, PlayerID) 
+                                            VALUES (?, ?)""", (test[0], test[1]))
+                    self.con.commit()
+                    print(self.cur.execute("SELECT * FROM Contestant").fetchall())        
