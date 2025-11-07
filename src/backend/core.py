@@ -57,6 +57,9 @@ class InitGameRequest:
 class InitGameResponse:
     game_idx: int
     timer: int  # if timer > 0, we can still answer questions, otherwise time is up
+    categories: list[str]
+    questions: list[str]
+    answers: list[str]
     questions: list[str]
     answers: list[str]
     game_status: GameStatus  # see GameStatus class for definition
@@ -113,7 +116,6 @@ def initialize_game():
         game_id=6692
     )
 
-    db_file = Path(__file__).absolute().parent.parent.joinpath('db/notJeopardyDB.db')
     add_players(db_file, init_game_request.players)
 
     return jsonify(init_game_response)

@@ -28,19 +28,18 @@ def extract_questions_data(db_file: Path):
     # 4 - Question
     # 5 - Answer
 
-    categories, questions, answers, points = [], [], [], []
+    categories, questions, answers, point_values = [], [], [], []
 
     with sql.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute("SELECT * FROM Question")
-        data = [(cat, question, answer, points) for _idx, cat, _round, points, question, answer in res.fetchall()]
 
         for _question_idx, category, _round, points, question, answer in res.fetchall():
             categories.append(category)
             questions.append(question)
             answers.append(answer)
-            points.append(points)
+            point_values.append(points)
 
         cursor.close()
 
-    return categories, questions, answers, points
+    return categories, questions, answers, point_values
