@@ -4,8 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 import src.db.data_driver as data_driver
-from src.db.db_api import add_players, extract_questions_data
-
+from src.db.db_api import add_players, extract_questions_data, ScoreUpdate, update_player_score
 
 app = Flask(__name__)
 CORS(app)
@@ -75,26 +74,22 @@ class InitGameResponse:
         self.game_id = game_id
 
 
-# @app.route('/submit_answer', methods=['POST'])
-# def submit_answer():
-#     player_answer = PlayerAnswer(**request.get_json())
-#     global GAME_IDX
-#     game_data = GAME_DATA[PLAYER_DATA[player_answer.username]]
-#
-#     answer_status = AnswerStatus.INCORRECT.value
-#
-#     if correct_answer(player_answer.user_answer, game_data.answers[player_answer.question_idx]):
-#         answer_status = AnswerStatus.CORRECT.value
-#         game_data.scores[player_answer.username] += game_data.point_values[player_answer.question_idx]
-#     else:
-#         game_data.scores[player_answer.username] -= game_data.point_values[player_answer.question_idx]
-#
-#     return jsonify(
-#         PlayerStatus(
-#             answer_status,
-#             game_data.scores[player_answer.username]
-#         )
-#     )
+@app.route('/submit_answer', methods=['POST'])
+def submit_answer():
+    player_answer = PlayerAnswer(**request.get_json())
+    # game_data = GAME_DATA[PLAYER_DATA[player_answer.username]]
+    db_file = Path(__file__).absolute().parent.parent.joinpath('db/notJeopardyDB.db')
+    _, _, answers, points = extract_questions_data(db_file)
+
+    answer_status = AnswerStatus.INCORRECT.value
+
+    if correct_answer(player_answer.user_answer, answers[player_answer.question_idx]):
+        answer_status = AnswerStatus.CORRECT.value
+        high_score = update_player_score(db_file, ScoreUpdate.INCREMENT, player_answer.username, points[player_answer.question_idx])
+    else:
+        high_score = update_player_score(db_file, ScoreUpdate.DECREMENT, player_answer.username, points[player_answer.question_idx])
+
+    return jsonify(PlayerStatus(answer_status, high_score))
 
 
 # Populates database with player information and pushes required info to frontend
