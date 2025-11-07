@@ -20,6 +20,7 @@ This strong entity contains all question, answers, and associated metadata sourc
 - CONSTRAINT UniqueQ UNIQUE (QuestionText)
 
 ### List of Unit Tests for Constraint Validation
+- test_Question_InsertRow
 
 ### Data Access Methods
 
@@ -50,13 +51,14 @@ This strong entity contains one entry for each unique player who registers to pl
 ### Attributes (incl. column & table constraints, where applicable)
 - PlayerID INTEGER PRIMARY KEY
 - UserName VARCHAR(50) NOT NULL
-- TotalGamesPlayed INT NOT NULL
-- TotalGamesWon INT NOT NULL
-- TotalGamesRunnerUp INT NOT NULL
-- HighScore INT NOT NULL
+- TotalGamesPlayed INT NOT NULL DEFAULT 0
+- TotalGamesWon INT NOT NULL DEFAULT 0
+- TotalGamesRunnerUp INT NOT NULL DEFAULT 0
+- HighScore INT NOT NULL DEFAULT 0
 - CONSTRAINT UniqueName UNIQUE (Username)
 
 ### List of Unit Tests for Constraint Validation
+- test_Player_newPlayerSignup
 
 ### Data Access Methods
 
@@ -106,7 +108,7 @@ This weak entity maps players (PlayerID) to the games (GameID) they have partici
 ### Attributes (incl. column & table constraints, where applicable)
 - GameID INT
 - PlayerID INT
-- PlayerScore INT NOT NULL
+- PlayerScore INT NOT NULL DEFAULT 0
 - CONSTRAINT GameContestFK FOREIGN KEY (GameID) REFERENCES Game (GameID) ON DELETE CASCADE ON UPDATE CASCADE
 - CONSTRAINT PlayerConstestFK FOREIGN KEY (PlayerID) REFERENCES Player (PlayerID) ON DELETE CASCADE ON UPDATE CASCADE
 
