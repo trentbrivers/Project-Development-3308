@@ -58,6 +58,37 @@ This strong entity contains one entry for each unique game instantiated by one o
 - test_Game_CreateNewGame
 
 ### Data Access Methods
+### 1) create_game_record
+
+#### Description
+- This function creates the Game Record entry in the Game table for the current game
+  
+#### Parameters
+- db_file - PATH
+- Username - STRING
+- GameID - INT
+  
+#### Return Values
+- None
+  
+#### Associated Tests
+- test_Game_CreateNewGame
+
+### 2) complete_game_record
+
+#### Description
+- This function completes the Game Record entry in the Game table for the current game
+  
+#### Parameters
+- db_file - PATH
+- Username - STRING
+- GameID - INT
+  
+#### Return Values
+- None
+  
+#### Associated Tests
+
 
 ---
 ## 3) Table Player
