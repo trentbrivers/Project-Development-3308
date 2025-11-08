@@ -13,7 +13,7 @@ def add_players(db_file: Path, usernames: list[str]):
             try:
                 cursor.execute("INSERT INTO Player (UserName) VALUES (?)", (username,))
             except sql.IntegrityError:
-                reset_existing_player_score(cursor, conn, username)
+                reset_existing_player_score(cursor, username)
 
             player_id = cursor.execute("SELECT PlayerID FROM Player WHERE UserName = ?;", (username,)).fetchone()[0]
             game_id = cursor.execute("SELECT MAX(GameID) FROM Game;").fetchone()[0]
@@ -23,7 +23,7 @@ def add_players(db_file: Path, usernames: list[str]):
         conn.commit()
 
 
-def reset_existing_player_score(cursor: Cursor, conn: Connection, username: str):
+def reset_existing_player_score(cursor: Cursor, username: str):
     player_id = cursor.execute("SELECT PlayerID FROM Player WHERE UserName = ?;", (username,)).fetchone()[0]
 
     cursor.execute(
