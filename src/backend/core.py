@@ -83,11 +83,11 @@ def submit_answer():
 
     if correct_answer(player_answer.user_answer, answers[player_answer.question_idx]):
         answer_status = AnswerStatus.CORRECT.value
-        high_score = update_player_score(db_file, player_answer.username, points[player_answer.question_idx])
+        player_score = update_player_score(db_file, player_answer.username, points[player_answer.question_idx])
     else:
-        high_score = update_player_score(db_file, player_answer.username, -1 * points[player_answer.question_idx])
+        player_score = update_player_score(db_file, player_answer.username, -1 * points[player_answer.question_idx])
 
-    return jsonify(PlayerStatus(answer_status, high_score))
+    return jsonify(PlayerStatus(answer_status, player_score))
 
 
 # Populates database with player information and pushes required info to frontend
