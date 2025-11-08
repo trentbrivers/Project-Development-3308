@@ -1,6 +1,6 @@
 # SQL_TESTING: Database Schema for Not Applicable's !Jeopardy App
 
-![ERD](img/SQL_ERD_v2.png)
+![ERD](img/SQL_ERD_v3.png)
 
 # Table Descriptions
 
@@ -152,7 +152,7 @@ This weak entity maps Questions (QuestionID) to the games (GameID) they have app
 ### Attributes (incl. column & table constraints, where applicable)
 - GameID INT
 - QuestionID INT
-- IsAnswered CHAR(1) NOT NULL
+- IsAnswered CHAR(1) NOT NULL DEFAULT 'N'
 - CONSTRAINT GameLogFK FOREIGN KEY (GameID) REFERENCES Game (GameID) ON DELETE CASCADEON UPDATE CASCADE
 - CONSTRAINT QuestionBankFK FOREIGN KEY (QuestionID) REFERENCES Question (QuestionID) ON DELETE CASCADE ON UPDATE CASCADE
 
@@ -164,17 +164,17 @@ This weak entity maps Questions (QuestionID) to the games (GameID) they have app
 ## 5) Table PlayerAnswer
 
 ### Description
-This weak entity maps answers submitted by specific players (PlayerID) to the specific gameboard (GameID, QuestionID) the individual was playing. It also contains metadata attributes to capture the text submitted and whether it was scored as correct by the backend answer evaluation function.
+This weak entity maps answers submitted by specific players (PlayerID) to the specific gameboard (GameID) and Question (QuestionID) the individual was playing. It also contains metadata attributes to capture the text submitted and whether it was scored as correct by the backend answer evaluation function.
 
 ### Attributes (incl. column & table constraints, where applicable)
 - PlayerID INT
 - GameID INT
 - QuestionID INT
 - AnswerText VARCHAR(500) NOT NULL
-- IsCorrect CHAR(1) NOT NULL
+- IsCorrect CHAR(1)
 - CONSTRAINT AnsweringPlayerFK FOREIGN KEY (PlayerID) REFERENCES Player (PlayerID) ON DELETE CASCADE ON UPDATE CASCADE
-- CONSTRAINT AnswerGameFK FOREIGN KEY (GameID) REFERENCES GameQuestion (GameID) ON DELETE CASCADE ON UPDATE CASCADE
-- CONSTRAINT AnsweredQFK FOREIGN KEY (QuestionID) REFERENCES GameQuestion (QuestionID) ON DELETE CASCADE ON UPDATE CASCADE
+- CONSTRAINT AnswerGameFK FOREIGN KEY (GameID) REFERENCES Game (GameID) ON DELETE CASCADE ON UPDATE CASCADE
+- CONSTRAINT AnsweredQFK FOREIGN KEY (QuestionID) REFERENCES Question (QuestionID) ON DELETE CASCADE ON UPDATE CASCADE
 
 ### List of Unit Tests for Constraint Validation
 
@@ -195,4 +195,5 @@ This weak entity maps players (PlayerID) to the games (GameID) they have partici
 
 ### List of Unit Tests for Constraint Validation
 - test_Game_CreateNewContestant
+- test_Contestant_DropPlayersOrGames
 
