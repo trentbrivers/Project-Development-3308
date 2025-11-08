@@ -1,12 +1,13 @@
 from pathlib import Path
 import re
 import sqlite3
+import sys
 
+# Pass the target db and data directory as command line params
+dbName =  Path(__file__).parent.resolve().joinpath(sys.argv[1]) # notJeopardyDB.db
+dataDirName = Path(__file__).parent.resolve().joinpath('data') # data
 
-def extract_game():
-    # All required paths
-    dbPath = Path(__file__).parent.resolve().joinpath('notJeopardyDB.db')
-    dataPath = Path(__file__).parent.resolve().joinpath('data')
+def extract_game(dbPath, dataPath):
 
     # Regex patterns for each attribute (except points - not compatible w/ regex strat)
     catMatch = re.compile(r'class="category_name">(.+)</td>')
@@ -15,7 +16,8 @@ def extract_game():
     aMatch = re.compile(r'class="correct_response">(.+)</em>')
 
     # Some html cleanup needed for text extracts
-    cleanupList = [(r'&amp;', '&'), (r'<br />', ' '), (r"\\'s", "'s"), (r'<i>', ''), (r'</i>', '')]
+    cleanupList = [(r'&amp;', '&'), (r'<br />', ' '), (r"\\'s", "'s"), (r'<i>', ''), (r'</i>', ''), 
+                   (r'\s{2,}', ' ')]
 
     # Lists to capture each attribute
     UniqueCategory = []
@@ -127,13 +129,13 @@ def extract_game():
     cur.executemany("INSERT INTO Question (Category, Round, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?, ?)", allRows)
     con.commit()
 
-    # Quick QC Check that this worked
-    cur.execute("SELECT * FROM Question")
-    print(cur.fetchall())
+    # # Quick QC Check that this worked
+    # cur.execute("SELECT * FROM Question")
+    # print(cur.fetchall())
 
     con.close()
 
     return
 
 if __name__ == '__main__':
-    extract_game()
+    extract_game(dbName, dataDirName)
