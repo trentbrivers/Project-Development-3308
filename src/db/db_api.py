@@ -1,5 +1,6 @@
 import sqlite3 as sql
 from pathlib import Path
+from datetime import datetime
 
 
 def add_players(db_file: Path, usernames: list[str]):
@@ -64,3 +65,40 @@ def extract_questions_data(db_file: Path):
         cursor.close()
 
     return categories, questions, answers, point_values
+
+
+
+#API for creating the game record upon the completion of a game - internal tracking purposes
+#Need to ensure that the game_id is passed into the backend code at some point if this is used as a tracking entry
+def create_game_record(db_file: Path, username: str, game_id):
+    """ Function to generate a new game entry into the Game Table. Internal Tracking of games user has played """
+    current_date_time = datetime.now()
+    current_date_time = current_date_time.strftime('%Y-%m-%d %H:%M:%S')
+    with sql.connect(db_file) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO Game (GameID,DisplayName, StartDate, EndDate, IsCompleteGame, IsCanceledGame)
+            VALUES (?,?,?,?,?,?) """,(game_id, username, current_date_time, current_date_time, 'N', 'N'))
+
+        cursor.close()
+        conn.commit()
+
+
+#API for completing the game record upon the completion of a game - internal tracking purposes
+#Need to ensure that the game_id is passed into the backend code at some point if this is used as a tracking entry
+def complete_game_record(db_file: Path, username: str, game_id):
+    """ Function to complete the new game entry in the Game Table. Internal Tracking of games user has played """
+    current_date_time = datetime.now()
+    current_date_time = current_date_time.strftime('%Y-%m-%d %H:%M:%S')
+    with sql.connect(db_file) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE Game
+            SET IsCompleteGame = 'Y', EndDate = ?
+            WHERE GameID = ? AND UserName = ? """, (current_date_time, game_id, username)
+        )
+
+        cursor.close()
+        conn.commit()
+
+
