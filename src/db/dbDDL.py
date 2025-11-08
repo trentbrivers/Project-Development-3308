@@ -36,7 +36,7 @@ def dbDDL(filePath: Path):
     cur = con.cursor()
 
     # Put CHECK NOT NULL CONSTRAINT on EndDate of completed game in Game?
-    # Put CHECK IsX = 'Y' or 'N'?
+    # Put CHECK IsX = 'Y' or 'N
     cur.executescript("""
         BEGIN;
         CREATE TABLE IF NOT EXISTS Game(GameID INTEGER PRIMARY KEY,
@@ -78,7 +78,7 @@ def dbDDL(filePath: Path):
     
         CREATE TABLE IF NOT EXISTS GameQuestion(GameID INT,
                                                 QuestionID INT,
-                                                IsAnswered CHAR(1) NOT NULL,
+                                                IsAnswered CHAR(1) NOT NULL DEFAULT 'N',
                                                 CONSTRAINT GameLogFK FOREIGN KEY (GameID) REFERENCES Game (GameID)
                                                     ON DELETE CASCADE
                                                     ON UPDATE CASCADE,
@@ -95,10 +95,10 @@ def dbDDL(filePath: Path):
                                                 CONSTRAINT AnsweringPlayerFK FOREIGN KEY (PlayerID) REFERENCES Player (PlayerID)
                                                     ON DELETE CASCADE
                                                     ON UPDATE CASCADE,
-                                                CONSTRAINT AnswerGameFK FOREIGN KEY (GameID) REFERENCES GameQuestion (GameID)
+                                                CONSTRAINT AnswerGameFK FOREIGN KEY (GameID) REFERENCES Game (GameID)
                                                     ON DELETE CASCADE
                                                     ON UPDATE CASCADE,
-                                                CONSTRAINT AnsweredQFK FOREIGN KEY (QuestionID) REFERENCES GameQuestion (QuestionID)
+                                                CONSTRAINT AnsweredQFK FOREIGN KEY (QuestionID) REFERENCES Question (QuestionID)
                                                     ON DELETE CASCADE
                                                     ON UPDATE CASCADE
                                                 );

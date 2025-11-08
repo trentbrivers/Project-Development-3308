@@ -40,7 +40,7 @@ def Question_InsertRow(dbFilePath, input):
 
     con.close()
 
-def Game_CreateNewGame(dbFilePath, username:str):
+def Game_CreateNewGame(dbFilePath):
     """Simulates the process of a signed-in user starting 
     a new game. Under the hood, a new row is created in 
     TABLE Game."""
@@ -71,7 +71,7 @@ def Contestant_CreateNewContestant(dbFilePath, username:str):
     # Would bundling CreateNewGame and CreateNewContestant in a TRANSACTION guarantee this is right?
     GameID = cur.execute("SELECT MAX(GameID) FROM Game;").fetchone()[0]
     # Main Query: Create a new row in Contestant
-    cur.execute("INSERT INTO Contestant (GameID, PlayerID) VALUES (?, ?)", (UserID, GameID))
+    cur.execute("INSERT INTO Contestant (GameID, PlayerID) VALUES (?, ?);", (GameID, UserID))
     con.commit()
 
     con.close()

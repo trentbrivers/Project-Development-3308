@@ -9,6 +9,35 @@ import unittest
 class dbDMLStubsTestCase(unittest.TestCase):
     # Implement a setUp method that creates a new sqlite3 database file (use test.db) and runs both functions.
     def setUp(self):
+        # Data that gets referenced in multiple tests below
+        self.playerScript = """BEGIN;
+                               UPDATE Player
+                               SET TotalGamesPlayed = 1,
+                                   TotalGamesWon = 1,
+                                   HighScore = 7700
+                               WHERE UserName = 'TrentKnowsAll';
+
+                               UPDATE Player
+                               SET TotalGamesPlayed = 1,
+                                   TotalGamesRunnerUp = 1,
+                                   HighScore = 7500
+                               WHERE UserName = 'CornRach';
+
+                               UPDATE Player
+                               SET TotalGamesPlayed = 1,
+                                   HighScore = 7400
+                               WHERE UserName = 'AtomicAbe';
+
+                               UPDATE Player
+                               SET TotalGamesPlayed = 1,
+                                   HighScore = 7100
+                               WHERE UserName = 'RetroJammin';
+                         
+                               COMMIT;"""
+        
+        self.UserNames = ['TrentKnowsAll', 'CornRach', 'AtomicAbe', 'RetroJammin']
+        
+        # DB config
         db = 'test_db'
         self.dbPath = Path(__file__).parent.resolve().joinpath(db)
         self.parentPath = self.dbPath.parent.resolve()
@@ -39,9 +68,8 @@ class dbDMLStubsTestCase(unittest.TestCase):
     
     def test_Player_newPlayerSignup(self):
         # Positive Control: These should all work (unique)
-        PosCtrl = ['TrentKnowsAll', 'CornRach', 'AtomicAbe', 'RetroJammin']
-        for username in PosCtrl:
-            with self.subTest(i=PosCtrl.index(username)):
+        for username in self.UserNames:
+            with self.subTest(i=self.UserNames.index(username)):
                 dbDMLStubs.Player_newUserSignup(self.dbPath, username)
                 expect = [(username, 0, 0, 0, 0)]
                 queryRes = self.cur.execute("""SELECT UserName, TotalGamesPlayed, TotalGamesWon, TotalGamesRunnerUp, HighScore 
@@ -50,31 +78,7 @@ class dbDMLStubsTestCase(unittest.TestCase):
                 self.assertEqual(expect, queryRes)
         
         # Set some nonzero data to test the next two items
-        self.cur.executescript("""BEGIN;
-                                  UPDATE Player
-                                  SET TotalGamesPlayed = 1,
-                                      TotalGamesWon = 1,
-                                      HighScore = 7700
-                                  WHERE UserName = 'TrentKnowsAll';
-
-                                  UPDATE Player
-                                  SET TotalGamesPlayed = 1,
-                                      TotalGamesRunnerUp = 1,
-                                      HighScore = 7500
-                                  WHERE UserName = 'CornRach';
-
-                                  UPDATE Player
-                                  SET TotalGamesPlayed = 1,
-                                      HighScore = 7400
-                                  WHERE UserName = 'AtomicAbe';
-
-                                  UPDATE Player
-                                  SET TotalGamesPlayed = 1,
-                                      HighScore = 7100
-                                  WHERE UserName = 'RetroJammin';
-                         
-                                  COMMIT;""")
-        
+        self.cur.executescript(self.playerScript)
         self.con.commit()
         
         # Negative Control: This should fail (non-unique)
@@ -128,7 +132,7 @@ class dbDMLStubsTestCase(unittest.TestCase):
         
         # Positive Control: This should work & show INSERT... DEFAULT VALUES in action
         rowCtBefore = len(self.cur.execute("SELECT * FROM Game;").fetchall())
-        dbDMLStubs.Game_CreateNewGame(self.dbPath, user)
+        dbDMLStubs.Game_CreateNewGame(self.dbPath)
         rowCtAfter = len(self.cur.execute("SELECT * FROM Game;").fetchall())
         self.assertEqual(rowCtBefore + 1, rowCtAfter, msg='A single row was not added to TABLE Game.')
 
@@ -139,7 +143,7 @@ class dbDMLStubsTestCase(unittest.TestCase):
         # Positive Control: This should work & show foreign keys in action
         # Tables Player, Game must have valid PKs to reference
         dbDMLStubs.Player_newUserSignup(self.dbPath, user)
-        dbDMLStubs.Game_CreateNewGame(self.dbPath, user)
+        dbDMLStubs.Game_CreateNewGame(self.dbPath)
         dbDMLStubs.Contestant_CreateNewContestant(self.dbPath, user)
         
         expect = [(1, 1, 0)]
@@ -155,4 +159,41 @@ class dbDMLStubsTestCase(unittest.TestCase):
                     self.cur.execute("""INSERT INTO Contestant (GameID, PlayerID) 
                                             VALUES (?, ?)""", (test[0], test[1]))
                     self.con.commit()
-                    print(self.cur.execute("SELECT * FROM Contestant").fetchall())        
+                    print(self.cur.execute("SELECT * FROM Contestant").fetchall())
+
+    def test_Contestant_DropPlayersOrGames(self):
+        """Confirm that RI actions (ON DELETE CASCADE ON UPDATE CASCADE) work"""
+        # Set up Player & Game with data
+        for name in self.UserNames:
+            dbDMLStubs.Player_newUserSignup(self.dbPath, name)
+        self.cur.executescript(self.playerScript)
+        dbDMLStubs.Game_CreateNewGame(self.dbPath)
+ 
+        # Set up Contestants
+        for name in self.UserNames:
+            dbDMLStubs.Contestant_CreateNewContestant(self.dbPath, name)
+        
+        # Delete a player and confirm their contestant is gone
+        # Positive control: Contestant should obviously exist before deletion!
+        expect = (1, 1, 0)
+        posCtrl = self.cur.execute("""SELECT * FROM Contestant WHERE PlayerID = 
+                                          (SELECT PlayerID FROM Player WHERE UserName = 'TrentKnowsAll');""").fetchone()
+        self.assertEqual(expect, posCtrl, msg='Error: Expect this row to exist before UserName is deleted from Player.')
+
+        self.cur.execute("DELETE FROM Player WHERE UserName = 'TrentKnowsAll';")
+        self.con.commit()
+
+        # Confirm Trent is gone from contestant and no one else is.
+        rowsLeft = len(self.cur.execute("SELECT * FROM Contestant;").fetchall())
+        self.assertEqual(rowsLeft, 3, msg='Error: No other Contestant rows should have ON DELETE CASCADE')
+        wheresTrent = self.cur.execute("SELECT * FROM Contestant WHERE PlayerID = 1;").fetchall()
+        self.assertEqual(wheresTrent, [], msg='Error: Row 1 should have been deleted by CASCADE')
+
+        # Update a player and confirm it propagates
+        self.cur.execute("UPDATE Player SET PlayerID = 13 WHERE UserName = 'CornRach';")
+        self.con.commit()
+        expect = (1, 13, 0)
+        ckUpdate = self.cur.execute("""SELECT * FROM Contestant WHERE PlayerID = 
+                                          (SELECT PlayerID FROM Player WHERE UserName = 'CornRach');""").fetchone()
+        self.assertEqual(expect, ckUpdate, msg='Error: Expect the PlayerID UPDATE to CASCADE.')
+              
