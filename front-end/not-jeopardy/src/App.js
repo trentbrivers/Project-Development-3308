@@ -24,10 +24,11 @@ export default function App() {
 
   const handleStartGame = () => {
     fetch('http://localhost:5000/initialize_game', {
-    method: 'GET',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json'
-    }
+    },
+    body: '{"players": ["Trent"]}'
   })
     .then(response => {
       if (!response.ok) {
