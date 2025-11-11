@@ -23,12 +23,13 @@ export default function App() {
   const [totalSelected, setTotalSelected] = useState(0);
 
   const handleStartGame = () => {
+    const postData = {"players": ["Trent"]}
     fetch('http://localhost:5000/initialize_game', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: '{"players": ["Trent"]}'
+    body: JSON.stringify(postData)
   })
     .then(response => {
       if (!response.ok) {
@@ -225,7 +226,7 @@ function AnswerScreen({ onReturn, answer, answer_status, player_score }) {
       <div>
         <h1>Official Answer: {answer}</h1> <br></br>
         <h2>{answer_status}</h2>
-        <p>{"$" + player_score}</p>
+        <p>{(player_score >= 0 ? "$" : "-$") + Math.abs(player_score)}</p>
         <button onClick={onReturn} className="button-design" >
             Return to Game
         </button>
