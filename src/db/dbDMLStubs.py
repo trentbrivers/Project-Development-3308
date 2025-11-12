@@ -35,7 +35,7 @@ def Question_InsertRow(dbFilePath, input):
     cur = con.cursor()
     cur.execute('PRAGMA foreign_keys = ON;')
     
-    cur.executemany("INSERT INTO Question (Round, Category, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?, ?)", input)
+    cur.executemany("INSERT INTO Question (GameCode, Round, Category, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?, ?, ?)", input)
     con.commit()
 
     con.close()
@@ -72,6 +72,25 @@ def Contestant_CreateNewContestant(dbFilePath, username:str):
     GameID = cur.execute("SELECT MAX(GameID) FROM Game;").fetchone()[0]
     # Main Query: Create a new row in Contestant
     cur.execute("INSERT INTO Contestant (GameID, PlayerID) VALUES (?, ?);", (GameID, UserID))
+    con.commit()
+
+    con.close()
+
+def GameQuestion_SetupGameboard(dbFilePath:Path, gameID:str):
+    """Simulates the process of storing a game board in
+    GameQuestion when the backend receives an entire game
+    (e.g., game_6692) as an request rather than a set of categories."""
+    
+    con = sqlite3.connect(dbFilePath) 
+    cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON;')
+    
+    gameID = (gameID, )
+    QuestionIDs = cur.execute('SELECT QuestionID FROM Question WHERE GameCode = (?)', gameID).fetchall()
+    GameID = cur.execute("SELECT MAX(GameID) FROM Game;").fetchone()[0]
+
+    insertRows = [(GameID, QuestionID[0]) for QuestionID in QuestionIDs]
+    cur.executemany('INSERT INTO GameQuestion (GameID, QuestionID) VALUES (?, ?)', insertRows)
     con.commit()
 
     con.close()

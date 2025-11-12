@@ -2,6 +2,7 @@
 
 import dbDDL
 import dbDMLStubs
+import dbExtractGame
 from pathlib import Path
 import sqlite3
 import unittest
@@ -96,31 +97,32 @@ class dbDMLStubsTestCase(unittest.TestCase):
 
     def test_Question_InsertRow(self):
         # Positive Control: This should work & show rowid aliasing in action
-        PosCtrl1 = [('J', 'Testing', 100, 'Why are we doing this?', 'To test basic RI actions.'),
-               ('J', 'Birds', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")]
+        PosCtrl1 = [('game_0000', 'J', 'Testing', 100, 'Why are we doing this?', 'To test basic RI actions.'),
+               ('game_0000', 'J', 'Birds', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")]
         dbDMLStubs.Question_InsertRow(self.dbPath, PosCtrl1)
-        queryRes = self.cur.execute("SELECT Round, Category, PointValue, QuestionText, QuestionAns FROM Question;").fetchall()
+        queryRes = self.cur.execute("SELECT GameCode, Round, Category, PointValue, QuestionText, QuestionAns FROM Question;").fetchall()
         self.assertEqual(PosCtrl1, queryRes, msg='Error: Expect the INSERT and SELECT to match.')
         
         # This should also work - different questions can have the same answer
-        PosCtrl2 = [('DJ', 'Testing', 200, 'Why do we validate table constraints?', 'To test basic RI actions.')]
+        PosCtrl2 = [('game_0000', 'DJ', 'Testing', 200, 'Why do we validate table constraints?', 'To test basic RI actions.')]
         # Query this and wrap in an assertEquals
         dbDMLStubs.Question_InsertRow(self.dbPath, PosCtrl2)
-        queryRes = self.cur.execute("SELECT Round, Category, PointValue, QuestionText, QuestionAns FROM Question WHERE Round = 'DJ';").fetchall()
+        queryRes = self.cur.execute("SELECT GameCode, Round, Category, PointValue, QuestionText, QuestionAns FROM Question WHERE Round = 'DJ';").fetchall()
         self.assertEqual(PosCtrl2, queryRes, msg='Error: Expect the INSERT and SELECT to match.')
 
         # This should fail - violates uniqueness constraint
-        NegCtrl1 = [('FJ', 'Testing', 0, 'Why do we validate table constraints?', 'Broken DB logic is no fun.')]
+        NegCtrl1 = [('game_0000', 'FJ', 'Testing', 0, 'Why do we validate table constraints?', 'Broken DB logic is no fun.')]
         with self.assertRaises(sqlite3.IntegrityError):
             dbDMLStubs.Question_InsertRow(self.dbPath, NegCtrl1)
 
         # Note: this passes, but it takes 26s b/c of internal disk I/O in sqlite3 - proceed with caution!
         # # Every single one of these should violate a NOT NULL constraint
-        # NegCtrl2 = [[('NULL', 'Birds', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")],
-        #             [('J', 'NULL', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")],
-        #             [('J', 'Birds', 'NULL', 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")],
-        #             [('J', 'Birds', 500, 'NULL', "Wilson's Pharalope")],
-        #             [('J', 'Birds', 500, 'This unusual shorebird has showy females and drab males.', 'NULL')]]
+        # NegCtrl2 = [[('NULL', 'J', 'Birds', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")],
+        #             [('game_0000', 'NULL', 'Birds', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")],
+        #             [('game_0000', 'J', 'NULL', 500, 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")],
+        #             [('game_0000', 'J', 'Birds', 'NULL', 'This unusual shorebird has showy females and drab males.', "Wilson's Pharalope")],
+        #             [('game_0000', 'J', 'Birds', 500, 'NULL', "Wilson's Pharalope")],
+        #             [('game_0000', 'J', 'Birds', 500, 'This unusual shorebird has showy females and drab males.', 'NULL')]]
         
         # for test in NegCtrl2:
         #     with self.subTest(i=NegCtrl2.index(test)):
@@ -196,4 +198,49 @@ class dbDMLStubsTestCase(unittest.TestCase):
         ckUpdate = self.cur.execute("""SELECT * FROM Contestant WHERE PlayerID = 
                                           (SELECT PlayerID FROM Player WHERE UserName = 'CornRach');""").fetchone()
         self.assertEqual(expect, ckUpdate, msg='Error: Expect the PlayerID UPDATE to CASCADE.')
+
+    def test_GameQuestion_SetupGameBoard(self):
+        
+        # Need to populate tbls Question, Game, and GameQuestion
+        dbExtractGame.extract_game(self.dbPath, self.parentPath.joinpath('test_data'))
+        dbDMLStubs.Game_CreateNewGame(self.dbPath)
+        dbDMLStubs.GameQuestion_SetupGameboard(self.dbPath, 'game_6692')
+
+        # Generate expected rows
+        expect = [(1, i+1, 'N') for i in range(61)]
+        query = self.cur.execute("SELECT * FROM GameQuestion").fetchall()
+        self.assertEqual(expect, query, msg='Error: Expect these results to match.')
+    
+    def test_GameQuestion_DropQuestionsOrGames(self):
+        """Confirm that RI actions (ON DELETE CASCADE ON UPDATE CASCADE) work"""
+        
+        # Need to populate tbls Question, Game, and GameQuestion
+        dbExtractGame.extract_game(self.dbPath, self.parentPath.joinpath('test_data'))
+        dbDMLStubs.Game_CreateNewGame(self.dbPath)
+        dbDMLStubs.GameQuestion_SetupGameboard(self.dbPath, 'game_6692')
+
+        # Delete a Category and confirm its Questions are gone
+        # Positive control: Contestant should obviously exist before deletion!
+        expect = [(1, i+1, 'N') for i in range(6)]
+        posCtrl = self.cur.execute("""SELECT * FROM GameQuestion WHERE QuestionID IN 
+                                        (SELECT QuestionID FROM Question WHERE PointValue = 100);""").fetchall()
+        self.assertEqual(expect, posCtrl, msg='Error: Expect this row to exist before UserName is deleted from Player.')
+
+        self.cur.execute("DELETE FROM Question WHERE PointValue = 100;")
+        self.con.commit()
+
+        # Confirm $100 questions are gone from GameQuestion and nothing else is.
+        rowsLeft = len(self.cur.execute("SELECT * FROM GameQuestion;").fetchall())
+        self.assertEqual(rowsLeft, 55, msg='Error: Only 6 GameQuestion rows should have ON DELETE CASCADE')
+        wheres100 = self.cur.execute("SELECT * FROM GameQuestion WHERE QuestionID IN (1, 2, 3, 4, 5, 6);").fetchall()
+        self.assertEqual(wheres100, [], msg='Error: Rows 1-6 should have been deleted by CASCADE')
+
+        # Update the GameID and confirm it propagates
+        self.cur.execute("UPDATE Game SET GameID = 13 WHERE GameID = 1;")
+        self.con.commit()
+        expect = (13, 7, 'N')
+        ckUpdate = self.cur.execute("""SELECT * FROM GameQuestion WHERE QuestionID = 7;""").fetchone()
+        self.assertEqual(expect, ckUpdate, msg='Error: Expect the PlayerID UPDATE to CASCADE.')
+
+
               
