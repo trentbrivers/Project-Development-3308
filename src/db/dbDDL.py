@@ -57,6 +57,7 @@ def dbDDL(filePath: Path):
                                           );
                   
         CREATE TABLE IF NOT EXISTS Question(QuestionID INTEGER PRIMARY KEY,
+                                            GameCode VARCHAR(9) NOT NULL,
                                             Category VARCHAR(50) NOT NULL,
                                             Round VARCHAR(2) NOT NULL,
                                             PointValue INT NOT NULL,

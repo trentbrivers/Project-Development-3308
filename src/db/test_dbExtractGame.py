@@ -32,6 +32,8 @@ class dbExtractGameTestCase(unittest.TestCase):
     
     def test_extract_game(self):
         # Gold label data taken manually from game_6692 
+        trueGameCode = {'game_6692'}
+        
         trueRounds = {'J', 'DJ', 'FJ'}
 
         trueCategories = {'STATE CAPITALS', 'MONSTERS', 'PROVERBS', '1949', 'THE CIRCLE', 'COMMON BONDS', 'FAMOUS NAMES', 'TRAVEL & TOURISM', 
@@ -101,20 +103,24 @@ class dbExtractGameTestCase(unittest.TestCase):
         con = sqlite3.connect(self.dbPath)
         cur = con.cursor()
         
+        # Validate GameID
+        allGameCodes = set([item[0] for item in cur.execute("SELECT DISTINCT GameCode FROM Question;").fetchall()])
+        self.assertEqual(trueGameCode, allGameCodes, msg='Error: GameID does not match.')
+        
         # Validate Rounds
-        allRounds = set([item[0] for item in cur.execute("SELECT DISTINCT Round FROM Question").fetchall()])
+        allRounds = set([item[0] for item in cur.execute("SELECT DISTINCT Round FROM Question;").fetchall()])
         self.assertEqual(trueRounds, allRounds, msg='Error: Round attributes do not match.')
 
         # Validate Categories
-        allCategories = set([item[0] for item in cur.execute("SELECT Category FROM Question").fetchall()])
+        allCategories = set([item[0] for item in cur.execute("SELECT Category FROM Question;").fetchall()])
         self.assertEqual(trueCategories, allCategories, msg='Error: Category attributes do not match.')
 
         # Validate Questions
-        allQs = set([item[0] for item in cur.execute("SELECT QuestionText FROM Question").fetchall()])
+        allQs = set([item[0] for item in cur.execute("SELECT QuestionText FROM Question;").fetchall()])
         self.assertEqual(trueQs, allQs, msg='Error: Category attributes do not match.')
 
         # Validate Answers
-        allAs = set([item[0] for item in cur.execute("SELECT QuestionAns FROM Question").fetchall()])
+        allAs = set([item[0] for item in cur.execute("SELECT QuestionAns FROM Question;").fetchall()])
         self.assertEqual(trueAs, allAs, msg='Error: Category attributes do not match.')
 
         con.close()

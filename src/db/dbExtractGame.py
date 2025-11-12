@@ -20,6 +20,8 @@ def extract_game(dbPath, dataPath):
                    (r'\s{2,}', ' ')]
 
     # Lists to capture each attribute
+    GameID = ''
+    GameCode = []
     UniqueCategory = []
     Category = []
     Round = []
@@ -30,6 +32,7 @@ def extract_game(dbPath, dataPath):
     # For others, iterate through files in data
     for f in dataPath.iterdir():
         if Path(f).resolve().is_file():
+            GameID = Path(f).name[:-5]
             with open(f, mode='r', encoding='utf-8') as data:
                 for line in data.readlines():
 
@@ -81,6 +84,9 @@ def extract_game(dbPath, dataPath):
 
                 data.close()
 
+    # Generate GameID de novo:
+    GameCode = [GameID for i in range(len(QuestionText))]
+    
     # Generate points de novo:
     values = [100, 200, 300, 400, 500, 200, 400, 600, 800, 1000]
     for value in values:
@@ -101,6 +107,8 @@ def extract_game(dbPath, dataPath):
     Category.append(UniqueCategory[-1])
 
     # Temp Extraction QC - make more rigorous for finished product
+    print(f'Created {len(GameCode)} GameCodes.')
+    # print(Game)
     print(f'Captured {len(UniqueCategory)} unique category names.')
     # print(UniqueCategory)
     print(f'Captured {len(Category)} total category names.')
@@ -115,7 +123,7 @@ def extract_game(dbPath, dataPath):
     # print(QuestionAns)
 
     # zip together the four lists
-    allRows = list(zip(Category, Round, PointValue, QuestionText, QuestionAns))
+    allRows = list(zip(GameCode, Category, Round, PointValue, QuestionText, QuestionAns))
 
     # Temp row creation QC - make more rigorous for the finished product
     print(f'Created {len(allRows)} 5-tuples for the database.')
@@ -126,7 +134,7 @@ def extract_game(dbPath, dataPath):
     cur = con.cursor()
 
     # Iterate through the tuples and executemany to get them into the db
-    cur.executemany("INSERT INTO Question (Category, Round, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?, ?)", allRows)
+    cur.executemany("INSERT INTO Question (GameCode, Category, Round, PointValue, QuestionText, QuestionAns) VALUES(?, ?, ?, ?, ?, ?)", allRows)
     con.commit()
 
     # # Quick QC Check that this worked
