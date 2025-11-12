@@ -44,7 +44,7 @@ This strong entity contains all question, answers, and associated metadata sourc
 ## 2) Table Game
 
 ### Description
-This strong entity contains one entry for each unique game instantiated by one or more player contestants. Its attributes capture game metadata like the date initiated and whether the game is in progress or completed. It has a one-to-many relationship with the weak entity GameQuestion that captures the set of QuestionIDs that populated the game boards of a specific GameID. Likewise, it has a one-to-many relationship with the weak entity Contestant that captures the PlayerIDs of all individual(s) that participated in a specific GameID.
+This strong entity contains one entry for each unique game instantiated by one or more player contestants. Its attributes capture game metadata like the date initiated and whether the game is in progress or completed. It has a one-to-many relationship with the weak entity GameQuestion that captures the set of QuestionIDs that populated the game boards of a specific GameID. Likewise, it has a one-to-many relationship with the weak entity Contestant that captures the PlayerIDs of all individual(s) that participated in a specific GameID. Finally, it has a one-to-many relationship with the weak entity PlayerAnswer that tracks which GameID a submitted PlayerAnwer corresponds to.
 
 ### Attributes (incl. column & table constraints, where applicable)
 - GameID INTEGER PRIMARY KEY
@@ -157,8 +157,11 @@ This weak entity maps Questions (QuestionID) to the games (GameID) they have app
 - CONSTRAINT QuestionBankFK FOREIGN KEY (QuestionID) REFERENCES Question (QuestionID) ON DELETE CASCADE ON UPDATE CASCADE
 
 ### List of Unit Tests for Constraint Validation
+- test_GameQuestion_SetupGameBoard
+- test_GameQuestion_DropQuestionsOrGames
 
 ### Data Access Methods
+This table was designed to disambiguate the games that a specific QuestionID is utilized in when multiple games draw from the same bank of questions. It is not accessed in the minimum viable product, which is strictly a one-player working instance of game-6692 created by directly querying table Question using the `db_api` function `extract_questions_data`.
 
 ---
 ## 5) Table PlayerAnswer
@@ -179,6 +182,7 @@ This weak entity maps answers submitted by specific players (PlayerID) to the sp
 ### List of Unit Tests for Constraint Validation
 
 ### Data Access Methods
+This table was designed to store individual answers for specific (PlayerID, GameID, QuestionID) combos for two primary reasons: 1) Maintenance of ACID compliance (specifically, Durable writes of in-progress game data to insure against power failures or service interruptions) and 2) Creation of player data that NotApplicable could analyze to improve gameplay experience (e.g., answer scoring algorithm improvements, identification of popular/unpopular trivia categories). These features are outside the scope of the Minimum Viable Product (a one-player playable instance of game_6692), and therefore this table is not accessed in the current build of the application.
 
 ---
 ## 6) Table Contestant
