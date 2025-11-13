@@ -219,12 +219,12 @@ class dbDMLStubsTestCase(unittest.TestCase):
         dbDMLStubs.Game_CreateNewGame(self.dbPath)
         dbDMLStubs.GameQuestion_SetupGameboard(self.dbPath, 'game_6692')
 
-        # Delete a Category and confirm its Questions are gone
+        # Delete a PointValue and confirm its Questions are gone
         # Positive control: Contestant should obviously exist before deletion!
         expect = [(1, i+1, 'N') for i in range(6)]
         posCtrl = self.cur.execute("""SELECT * FROM GameQuestion WHERE QuestionID IN 
                                         (SELECT QuestionID FROM Question WHERE PointValue = 100);""").fetchall()
-        self.assertEqual(expect, posCtrl, msg='Error: Expect this row to exist before UserName is deleted from Player.')
+        self.assertEqual(expect, posCtrl, msg='Error: Expect this row to exist before PointValue = 100 is deleted from Question.')
 
         self.cur.execute("DELETE FROM Question WHERE PointValue = 100;")
         self.con.commit()
@@ -240,7 +240,76 @@ class dbDMLStubsTestCase(unittest.TestCase):
         self.con.commit()
         expect = (13, 7, 'N')
         ckUpdate = self.cur.execute("""SELECT * FROM GameQuestion WHERE QuestionID = 7;""").fetchone()
-        self.assertEqual(expect, ckUpdate, msg='Error: Expect the PlayerID UPDATE to CASCADE.')
+        self.assertEqual(expect, ckUpdate, msg='Error: Expect the GameID UPDATE to CASCADE.')
+    
+    def test_PlayerAnswer_AddSubmittedAnswer(self):
+        
+        # Test-specific setup: Need Question, Player, Game
+        dbExtractGame.extract_game(self.dbPath, self.parentPath.joinpath('test_data'))
+        dbDMLStubs.Game_CreateNewGame(self.dbPath)
+        for username in self.UserNames:
+            with self.subTest(i=self.UserNames.index(username)):
+                dbDMLStubs.Player_newUserSignup(self.dbPath, username)
 
+        # Make sure the QC check on isCorrect works
+        with self.assertRaises(ValueError):
+            dbDMLStubs.PlayerAnswer_AddSubmittedAnswer(self.dbPath, 1, 1, 1, 'An answer', 'p' )
 
-              
+        # Make sure a regular insert works
+        dbDMLStubs.PlayerAnswer_AddSubmittedAnswer(self.dbPath, 1, 1, 1, 'An answer', 'y' )
+        expect = (1, 1, 1, 'An answer', 'Y')
+        query = self.cur.execute("SELECT * FROM PlayerAnswer").fetchone()
+        self.assertEqual(expect, query, msg='Error: Expect these two rows to match.')
+
+    def test_PlayerAnswer_ChangeOrDeleteFKs(self):
+        """Confirm that RI actions (ON DELETE CASCADE ON UPDATE CASCADE) work"""
+        
+        # Test-specific setup: Need Question, Player, Game
+        dbExtractGame.extract_game(self.dbPath, self.parentPath.joinpath('test_data'))
+        dbDMLStubs.Game_CreateNewGame(self.dbPath)
+        for username in self.UserNames:
+            with self.subTest(i=self.UserNames.index(username)):
+                dbDMLStubs.Player_newUserSignup(self.dbPath, username)
+
+        # Answer some questions
+        testAns = [(2, 1, 3, 'Its cover', 'Y'),
+                   (3, 1, 8, 'Yeti', 'Y'),
+                   (2, 1, 18, 'rivers', 'N'),
+                   (1, 1, 25, 'Helena', 'Y')]
+        for ans in testAns:
+            dbDMLStubs.PlayerAnswer_AddSubmittedAnswer(self.dbPath, ans[0], ans[1], ans[2], ans[3], ans[4])
+
+        # Delete a PointValue and confirm its Questions are gone
+        # Positive control: PlayerAnswer should obviously exist before deletion!
+        expect = (2, 1, 3, 'Its cover', 'Y')
+        posCtrl = self.cur.execute("""SELECT * FROM PlayerAnswer WHERE QuestionID IN 
+                                        (SELECT QuestionID FROM Question WHERE PointValue = 100);""").fetchone()
+        self.assertEqual(expect, posCtrl, msg='Error: Expect this row to exist before PointValue = 100 is deleted from Question.')
+
+        self.cur.execute("DELETE FROM Question WHERE PointValue = 100;")
+        self.con.commit()
+
+        # Confirm question 3 is gone from PlayerAnswer and nothing else is.
+        rowsLeft = len(self.cur.execute("SELECT * FROM PlayerAnswer;").fetchall())
+        self.assertEqual(rowsLeft, len(testAns)-1, msg='Error: Only 1 PlayerAnswer row should have ON DELETE CASCADE')
+        wheres3 = self.cur.execute("SELECT * FROM GameQuestion WHERE QuestionID IN (1, 2, 3, 4, 5, 6);").fetchone()
+        self.assertIsNone(wheres3, msg='Error: Question 3 ans should have been deleted by CASCADE')
+
+        # Update the GameID and confirm it propagates
+        self.cur.execute("UPDATE Game SET GameID = 13 WHERE GameID = 1;")
+        self.con.commit()
+        expect = (3, 13, 8, 'Yeti', 'Y')
+        ckUpdate = self.cur.execute("""SELECT * FROM PlayerAnswer WHERE QuestionID = 8;""").fetchone()
+        self.assertEqual(expect, ckUpdate, msg='Error: Expect the GameID UPDATE to CASCADE.')
+        
+        # Delete the PlayerID and confirm it cascades
+        self.cur.execute("DELETE FROM Player WHERE PlayerID = 3;")
+        self.con.commit()
+        ckUpdate = self.cur.execute("""SELECT * FROM PlayerAnswer WHERE QuestionID = 8;""").fetchone()
+        self.assertIsNone(ckUpdate, msg='Error: Expect the PlayerID DELETE to CASCADE.')
+
+        # Delete the GameID and confirm it cascades
+        self.cur.execute("DELETE FROM Game WHERE GameID = 13;")
+        self.con.commit()
+        ckUpdate = self.cur.execute("""SELECT * FROM PlayerAnswer;""").fetchall()
+        self.assertEqual([], ckUpdate, msg='Error: Expect the GameID DELETE to CASCADE.')

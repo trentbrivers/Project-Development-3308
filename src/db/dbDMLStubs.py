@@ -26,6 +26,12 @@ def Player_newUserSignup(dbFilePath, input):
     
     con.close()
 
+def Player_PublishLeaderBoard(dbFilePath:Path, ranks:int):
+    """Simulates the process of querying HighScore to update
+    the leaderboard. The user can pass an integer via ranks
+    to control how many individuals are displayed."""
+    pass
+
 def Question_InsertRow(dbFilePath, input):
     """Simulates the process of entering multiple rows of question data 
     into TABLE Question. Intended to check that the CONSTRAINT 
@@ -91,6 +97,25 @@ def GameQuestion_SetupGameboard(dbFilePath:Path, gameID:str):
 
     insertRows = [(GameID, QuestionID[0]) for QuestionID in QuestionIDs]
     cur.executemany('INSERT INTO GameQuestion (GameID, QuestionID) VALUES (?, ?)', insertRows)
+    con.commit()
+
+    con.close()
+
+def PlayerAnswer_AddSubmittedAnswer(dbFilePath:Path, userID:int, gameID:int, questionID:int, ans:str, isCorrect:str):
+    """Simulates the process of writing a submitted answer to 
+    the DB during gameflow to back it up and store it for 
+    analytics. Assumes the backend has already scored the 
+    answer for correctness."""
+
+    if isCorrect.upper() not in ['Y', 'N']:
+        raise ValueError('Attribute isCorrect must be either Y or N')
+    
+    con = sqlite3.connect(dbFilePath) 
+    cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON;')
+
+    newRow = (userID, gameID, questionID, ans, isCorrect.upper())
+    cur.execute("INSERT INTO PlayerAnswer VALUES (?, ?, ?, ?, ?)", newRow)
     con.commit()
 
     con.close()
