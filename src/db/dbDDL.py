@@ -14,6 +14,7 @@ def preClean(filePath: Path):
 
     cur.executescript("""
         BEGIN;
+        DROP TRIGGER IF EXISTS CheckHighScore;
         DROP TABLE IF EXISTS Contestant;
         DROP TABLE IF EXISTS PlayerAnswer;
         DROP TABLE IF EXISTS GameQuestion;
@@ -103,6 +104,15 @@ def dbDDL(filePath: Path):
                                                     ON DELETE CASCADE
                                                     ON UPDATE CASCADE
                                                 );
+        
+        CREATE TRIGGER IF NOT EXISTS CheckHighScore
+            AFTER UPDATE OF PlayerScore ON Contestant
+            FOR EACH ROW WHEN (NEW.PlayerScore > OLD.PlayerScore)
+            BEGIN UPDATE Player 
+                  SET HighScore = NEW.PlayerScore 
+                  WHERE Player.PlayerID = OLD.PlayerID;
+            END;
+                      
         COMMIT;
         """)
     con.commit()

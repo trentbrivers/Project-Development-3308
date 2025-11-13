@@ -220,6 +220,32 @@ class dbDMLStubsTestCase(unittest.TestCase):
                                           (SELECT PlayerID FROM Player WHERE UserName = 'CornRach');""").fetchone()
         self.assertEqual(expect, ckUpdate, msg='Error: Expect the PlayerID UPDATE to CASCADE.')
 
+    def test_Contestant_UpdatePlayerScore(self):
+        """Tests the functionality of TRIGGER CheckHighScore"""
+        # Setup: Player, Game, & Contestant must have data
+        for name in self.UserNames:
+            dbDMLStubs.Player_newUserSignup(self.dbPath, name)
+        
+        dbDMLStubs.Game_CreateNewGame(self.dbPath)
+        
+        for name in self.UserNames:
+            dbDMLStubs.Contestant_CreateNewContestant(self.dbPath, name)
+        
+        # Test that HighScore is currently 0 for all Players
+        expect = [('TrentKnowsAll', 0), ('CornRach', 0), ('AtomicAbe', 0), ('RetroJammin', 0)] 
+        query = self.cur.execute("SELECT UserName, HighScore FROM Player;").fetchall()
+        self.assertEqual(expect, query, msg='Error: All HighScores should currently be 0.')
+        
+        # Set PlayerScores so that current game is where high scores originated
+        setScores = [('TrentKnowsAll', 7700), ('CornRach', 7500), ('AtomicAbe', 7400), ('RetroJammin', 7100)]
+        for name, score in setScores:
+            dbDMLStubs.Contestant_UpdatePlayerScore(self.dbPath, name, score)
+
+        # Test that HighScore is automatically updated to reflect new info
+        expect = [('TrentKnowsAll', 7700), ('CornRach', 7500), ('AtomicAbe', 7400), ('RetroJammin', 7100)] 
+        query = self.cur.execute("SELECT UserName, HighScore FROM Player;").fetchall()
+        self.assertEqual(expect, query, msg='Error: All HighScores should now be nonzero.')
+
     def test_GameQuestion_SetupGameBoard(self):
         
         # Need to populate tbls Question, Game, and GameQuestion

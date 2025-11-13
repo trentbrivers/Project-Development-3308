@@ -92,6 +92,31 @@ def Contestant_CreateNewContestant(dbFilePath, username:str):
 
     con.close()
 
+def Contestant_UpdatePlayerScore(dbFilePath:Path, username:str, pointvalue:int):
+    """Simulates updates to the PlayerScore attribute and 
+    tests whether the trigger CheckHighScore works correctly 
+    to automatically update Player.HighScore when a player 
+    reaches a new personal best."""
+
+    con = sqlite3.connect(dbFilePath) 
+    cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON;')
+
+    userID = cur.execute("SELECT PlayerID FROM Player WHERE UserName = ?;", (username,)).fetchone()[0]
+    score = cur.execute("SELECT PlayerScore FROM Contestant WHERE PlayerID = ?;", str(userID)).fetchone()[0]
+    print(f'Score: {score}')
+    score += pointvalue
+
+    cur.execute("""UPDATE Contestant 
+                   SET PlayerScore = ?
+                   WHERE PlayerID = ?""", (score, userID))
+    con.commit()
+
+    con.close()
+
+
+
+
 def GameQuestion_SetupGameboard(dbFilePath:Path, gameID:str):
     """Simulates the process of storing a game board in
     GameQuestion when the backend receives an entire game
