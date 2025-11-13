@@ -1,6 +1,12 @@
 # SQL_TESTING: Database Schema for Not Applicable's !Jeopardy App
 
-![ERD](img/SQL_ERD_v3.png)
+![ERD](img/SQL_ERD_v4.png)
+
+
+# Visual Summary of Database Access During Gameflow
+![Gameflow1](img/UserName_NewGame.png)
+![Gameflow2](img/LeaderBoard_PlayerAnswer.png)
+![Gameflow3](img/CorrectAnswer_GameOver.png)
 
 # Table Descriptions
 
@@ -187,6 +193,8 @@ This weak entity maps answers submitted by specific players (PlayerID) to the sp
 - CONSTRAINT AnsweredQFK FOREIGN KEY (QuestionID) REFERENCES Question (QuestionID) ON DELETE CASCADE ON UPDATE CASCADE
 
 ### List of Unit Tests for Constraint Validation
+- test_PlayerAnswer_AddSubmittedAnswer
+- test_PlayerAnswer_ChangeOrDeleteFKs
 
 ### Data Access Methods
 This table was designed to store individual answers for specific (PlayerID, GameID, QuestionID) combos for two primary reasons: 1) Maintenance of ACID compliance (specifically, Durable writes of in-progress game data to insure against power failures or service interruptions) and 2) Creation of player data that NotApplicable could analyze to improve gameplay experience (e.g., answer scoring algorithm improvements, identification of popular/unpopular trivia categories). These features are outside the scope of the Minimum Viable Product (a one-player playable instance of game_6692), and therefore this table is not accessed in the current build of the application.
