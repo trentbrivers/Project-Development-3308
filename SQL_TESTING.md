@@ -12,8 +12,9 @@ This strong entity contains all question, answers, and associated metadata sourc
 
 ### Attributes (incl. column & table constraints, where applicable)
 - QuestionID INTEGER PRIMARY KEY
+- GameCode VARCHAR(9) NOT NULL 
 - Category VARCHAR(50) NOT NULL
-- RoundName VARCHAR(2) NOT NULL
+- Round VARCHAR(2) NOT NULL
 - PointValue INT NOT NULL
 - QuestionText VARCHAR(500) NOT NULL
 - QuestionAns VARCHAR(500) NOT NULL
@@ -22,23 +23,25 @@ This strong entity contains all question, answers, and associated metadata sourc
 ### List of Unit Tests for Constraint Validation
 - test_Question_InsertRow
 
+
 ### Associated Data Access Methods 
-### 1) extract_questions_answers_array
+### 1) extract_questions_data
 
 ### Description
-- This function is called from initialize_game and extracts question and answer array from the Table Question.  
+- This function is called from initialize_game and extracts questions, answers, categories and point values from the Table Question. Each of these is then put into an array and passed to front end as a JSON from the backend driver code. 
 
 ### Parameters
-- filePath to DB 
-- DB File
-- Table Name (Question)
+- DB File Path 
 
 ### Return Values
-- Question Array in 6 column x 5 row format
-- Answer Array in 6 column x 5 row format
+- Category Array
+- Question Array 
+- Answer Array 
+- Point Value Array
 
 ### Associated Tests
 - Game_6692
+- test_extract_game
 
 ---
 ## 2) Table Game
@@ -61,13 +64,13 @@ This strong entity contains one entry for each unique game instantiated by one o
 ### 1) create_game_record
 
 #### Description
-- This function creates the Game Record entry in the Game table for the current game
+- This function creates the Game Record entry in the Game table for the current game. Records the current time and inserts time, Game_Id and DisplayName into the Game Table with the rest of the entries as default values
   
 #### Parameters
 - db_file - PATH
-- Username - STRING
-- GameID - INT
-  
+- username - STRING
+- Game_ID - INT 
+ 
 #### Return Values
 - None
   
@@ -77,7 +80,7 @@ This strong entity contains one entry for each unique game instantiated by one o
 ### 2) complete_game_record
 
 #### Description
-- This function completes the Game Record entry in the Game table for the current game
+- This function completes the Game Record entry in the Game table for the current game. Records the current time and updates end time in the Game Table, marking the current game as complete
   
 #### Parameters
 - db_file - PATH
@@ -88,7 +91,7 @@ This strong entity contains one entry for each unique game instantiated by one o
 - None
   
 #### Associated Tests
-
+- test_complete_game_record
 
 ---
 ## 3) Table Player
@@ -133,6 +136,8 @@ This strong entity contains one entry for each unique player who registers to pl
 #### Description
 - This function adds usernames into the Player DB. Meant to be called on start of a new game and players need to be populated in the database.
   The other attributes of the Player Table are initialized to 0 
+- Updates Contestant table to track participation in this Game - tracked via GameID 
+
 #### Parameters
 - db_file as PATH
 - usernames as a list of STRINGs 
@@ -141,6 +146,8 @@ This strong entity contains one entry for each unique player who registers to pl
 - No return 
   
 #### Associated Tests
+- test_add_players
+  - intializes list of dummy players and checks Player/Contestant table for proper entries
 
 
 ---
@@ -201,3 +208,39 @@ This weak entity maps players (PlayerID) to the games (GameID) they have partici
 - test_Game_CreateNewContestant
 - test_Contestant_DropPlayersOrGames
 
+### Data Access Methods
+
+### 1) reset_existing_player_score
+
+#### Description
+- sets player score back to zero in the Player table
+
+#### Parameters
+- cursor 
+- username to reset score of as STRING 
+  
+#### Return Values
+- No return 
+  
+#### Associated Tests
+- test_reset_existing_player_score
+  - inserts dummy player with score
+  - resets score and verifies at zero
+
+### 2) update_player_score
+
+#### Description
+- updates player score to new value in the Player table
+
+#### Parameters
+- db_file path
+- username as STRING
+- score as int 
+  
+#### Return Values
+- player_score
+  
+#### Associated Tests
+- test_update_player_score
+  - inserts dummy player with score
+  - updates score of dummy player and verifies entry in contestant table
