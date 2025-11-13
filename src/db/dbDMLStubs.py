@@ -30,7 +30,17 @@ def Player_PublishLeaderBoard(dbFilePath:Path, ranks:int):
     """Simulates the process of querying HighScore to update
     the leaderboard. The user can pass an integer via ranks
     to control how many individuals are displayed."""
-    pass
+    
+    con = sqlite3.connect(dbFilePath) 
+    cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON;')
+
+    query = cur.execute("SELECT UserName, HighScore FROM Player ORDER BY HighScore DESC LIMIT ?", str(ranks)).fetchall()
+    
+    con.close()
+
+    return query
+    
 
 def Question_InsertRow(dbFilePath, input):
     """Simulates the process of entering multiple rows of question data 

@@ -95,6 +95,27 @@ class dbDMLStubsTestCase(unittest.TestCase):
         self.assertEqual(expect, queryRes)
         
 
+    def test_Player_PublishLeaderBoard(self):
+        # Setup: Populate Player with data
+        for username in self.UserNames:
+            with self.subTest(i=self.UserNames.index(username)):
+                dbDMLStubs.Player_newUserSignup(self.dbPath, username)
+                expect = [(username, 0, 0, 0, 0)]
+                queryRes = self.cur.execute("""SELECT UserName, TotalGamesPlayed, TotalGamesWon, TotalGamesRunnerUp, HighScore 
+                                           FROM Player 
+                                           WHERE UserName = '{}';""".format(username)).fetchall()
+                self.assertEqual(expect, queryRes)
+        
+        self.cur.executescript(self.playerScript)
+        self.con.commit()
+
+        # Test that expected Top 3 are returned
+        expect = [('TrentKnowsAll', 7700),
+                  ('CornRach', 7500),
+                  ('AtomicAbe', 7400)]
+        res = dbDMLStubs.Player_PublishLeaderBoard(self.dbPath, 3)
+        self.assertEqual(expect, res, msg='Error: Expect these values to match.')
+
     def test_Question_InsertRow(self):
         # Positive Control: This should work & show rowid aliasing in action
         PosCtrl1 = [('game_0000', 'J', 'Testing', 100, 'Why are we doing this?', 'To test basic RI actions.'),
