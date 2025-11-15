@@ -71,7 +71,7 @@ def extract_questions_data(db_file: Path):
         cursor = conn.cursor()
         res = cursor.execute("SELECT * FROM Question")
 
-        for question_idx, category, _round, points, question, answer in res.fetchall():
+        for question_idx, _game_code, category, _round, points, question, answer in res.fetchall():
             questions.append(question)
             answers.append(answer)
             point_values.append(points)
