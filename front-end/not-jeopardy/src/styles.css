@@ -1,159 +1,222 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: "Anton", sans-serif;
-  margin: 20px;
-  padding: 0;
+    font-family: "Anton", serif;
+    margin: 20px;
+    padding: 0;
 }
 
-h1 {
-  margin-top: 0;
-  font-size: 22px;
-}
-
-h2 {
-  margin-top: 0;
-  font-size: 20px;
-}
-
-h3 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-h4 {
-  margin-top: 0;
-  font-size: 16px;
-}
-
-h5 {
-  margin-top: 0;
-  font-size: 14px;
-}
-
-h6 {
-  margin-top: 0;
-  font-size: 12px;
-}
+/* Headings */
+h1 { font-size: 22px; margin-top: 0; }
+h2 { font-size: 20px; margin-top: 0; }
+h3 { font-size: 18px; margin-top: 0; }
+h4 { font-size: 16px; margin-top: 0; }
+h5 { font-size: 14px; margin-top: 0; }
+h6 { font-size: 12px; margin-top: 0; }
 
 code {
-  font-size: 1.2em;
+    font-size: 1.2em;
 }
 
 ul {
-  padding-inline-start: 20px;
+    padding-inline-start: 20px;
 }
 
+/* Title Screen */
+
 .title-screen {
+    align-items: center;
+    background-image: linear-gradient(#0B0D3A, #4704FA, #D92E8F, #FF8A00);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     height: 100vh;
-    background-image: linear-gradient(#0B0D3A, #4704FA, #D92E8F, #FF8A00);
+    justify-content: center;
     text-align: center;
 }
 
+/* Start Game Button */
+
 .button-design {
     background-color: #ffffff;
-    font-size: 45px;
-    text-transform: uppercase;
-    font-family: 'Slackey';
-    padding: 20px 60px;
-    border-radius: 8px;   /* soft corners, not sharp */
+    border-radius: 8px;
     box-shadow: 2px 6px 8px rgba(0,0,0,0.3);
+    font-family: "Slackey";
+    font-size: 36px;
+    padding: 10px 50px;
+    text-transform: uppercase;
 }
 
 .button-design:hover {
     background-color: #ffd633;
 }
 
+/* ----------------------- */
+/* Game Board */
+/* ----------------------- */
+
 .cat-tile {
-  background: #2650db;
-  border: 1px solid #999;
-  float: left;
-  font-size: 16px;
-  font-weight: bold;
-  color: #ffffff;
-  line-height: 34px;
-  height: 48px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  text-transform: uppercase;
-  width: 96px;
+    background: #2650db;
+    border: 1px solid #999;
+    color: #ffffff;
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    height: 48px;
+    line-height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: 96px;
 }
 
 .money-tile {
-  background: #2650db;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  color: #fab700;
-  line-height: 34px;
-  height: 48px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 96px;
+    background: #2650db;
+    border: 1px solid #999;
+    color: #fab700;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    height: 48px;
+    line-height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 96px;
 }
 
 .board-row:after {
-  clear: both;
-  content: '';
-  display: table;
+    clear: both;
+    content: "";
+    display: table;
 }
 
 .status {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
+
 .game {
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .game-info {
-  margin-left: 20px;
+    margin-left: 20px;
 }
 
+/* ----------------------- */
+/* Question Screen */
+/* ----------------------- */
+
 .question-screen {
-  background-color: #0033a0;
-  color: #ffffff;
-  min-height: 100vh;
-  padding: 20px;
+    align-items: center;
+    background-color: #0033a0;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    text-align: center;
 }
 
 .question-screen h3 {
-  font-size: 26px;
-  font-weight: bold;
+    font-family: "Newsreader", serif;
+    font-size: 26px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .question-screen input {
-  font-size: 20px;
-  padding: 10px;
-  margin-top: 20px;
-  width: 300px;
-  text-align: center;
-  border: none;
-  border-radius: 5px;
+    border: none;
+    border-radius: 5px;
+    font-family: "Anton", serif;
+    font-size: 20px;
+    margin-top: 20px;
+    padding: 10px;
+    text-align: center;
+    width: 300px;
 }
 
 .question-screen button {
-  margin-top: 20px;
-  font-size: 20px;
-  padding: 10px 20px;
-  background-color: #fab700; /* yellow Jeopardy button */
-  color: #000;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+    background-color: #fab700;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    cursor: pointer;
+    font-family: "Anton", serif;
+    font-size: 20px;
+    margin-top: 20px;
+    padding: 10px 20px;
 }
 
 .question-screen button:hover {
-  background-color: #ffd633; /* slightly brighter on hover */
+    background-color: #ffd633;
+}
+
+/* ----------------------- */
+/* Answer Screen */
+/* ----------------------- */
+
+.answer-screen {
+    align-items: center;
+    background-color: #0033a0;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px 20px;
+    text-align: center;
+}
+
+.answer-reveal {
+    color: #ffffff;
+    font-family: "Newsreader", serif;
+    font-size: 26px;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+
+.answer-status {
+    font-size: 26px;
+}
+
+.correct {
+    color: green;
+    text-transform: uppercase;
+}
+
+.incorrect {
+    color: red;
+    text-transform: uppercase;
+}
+
+.score-display {
+    font-family: "Caveat", cursive;
+    font-size: 50px;
+}
+
+/* ----------------------- */
+/* Game Over Screen */
+/* ----------------------- */
+
+.game-over-screen {
+    align-items: center;
+    background-image: linear-gradient(#0B0D3A, #4704FA, #D92E8F, #FF8A00);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    text-align: center;
+}
+
+.game-over-text {
+    font-size: 50px;
 }

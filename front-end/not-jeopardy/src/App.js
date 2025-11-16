@@ -223,23 +223,32 @@ function QuestionScreen({ onSubmit, question }) {
 
 function AnswerScreen({ onReturn, answer, answer_status, player_score }) {
     return (
-      <div>
-        <h1>Official Answer: {answer}</h1> <br></br>
-        <h2>{answer_status}</h2>
-        <p>{(player_score >= 0 ? "$" : "-$") + Math.abs(player_score)}</p>
+      <div className="answer-screen">
+        <h1 className="answer-reveal"> Official Answer: {answer}</h1> <br></br>
+
+          <h2 className={`answer-status ${answer_status === "correct" ? "correct" : "incorrect"}`}>
+              {answer_status}
+          </h2>
+
+          <p className={"score-display"}>
+            {(player_score >= 0 ? "$" : "-$") + Math.abs(player_score)}
+        </p>
         <button onClick={onReturn} className="button-design" >
             Return to Game
         </button>
-
       </div>
     );
 }
 
 function GameOver({final_score}) {
   return (
-    <div>
-      <h1>CONGRATULATIONS!</h1>
-      <h2>Final Score: {final_score}</h2>
+    <div className={"game-over-screen"}>
+        <img
+            src="/notJeopardy-Logo.png"
+            alt="!Jeopardy Logo"
+        />
+      <h1 className={"game-over-text"}>CONGRATULATIONS!</h1>
+      <p className={"score-display"}>Final Score: {final_score}</p>
     </div>
   )
 }

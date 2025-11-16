@@ -6,3 +6,4 @@ src/db/tempTest.py
 .DS_Store
 .gitignore
 *.swp
+src/db/notJeopardyDB.db
