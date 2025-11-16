@@ -21,56 +21,39 @@ class GameStatus(Enum):
     IN_PROGRESS = "in_progress"
 
 
+# REQUESTS
+
+@dataclass
+class InitGameRequest:
+    players: list[str]
+
+
 @dataclass
 class PlayerAnswer:
     question_idx: int
     user_answer: str
     username: str
 
-    def __init__(self, question_idx, user_answer, username):
-        self.question_idx = question_idx
-        self.user_answer = user_answer
-        self.username = username
 
+# RESPONSES
 
 @dataclass
 class PlayerStatus:
     answer_status: AnswerStatus
     player_score: int
 
-    def __init__(self, answer_status, player_score):
-        self.answer_status = answer_status
-        self.player_score = player_score
-
-
-@dataclass
-class InitGameRequest:
-    players = list[str]
-
-    def __init__(self, players):
-        self.players = players
-
 
 @dataclass
 class InitGameResponse:
     game_idx: int
-    timer: int  # if timer > 0, we can still answer questions, otherwise time is up
+    timer: int
     categories: list[str]
     questions: list[str]
     answers: list[str]
     questions: list[str]
     answers: list[str]
-    game_status: GameStatus  # see GameStatus class for definition
-    game_id: int  # this is the ID tracking which !jeopardy game we're referencing
-
-    def __init__(self, game_idx, timer, categories, questions, answers, game_status, game_id):
-        self.game_idx = game_idx
-        self.timer = timer
-        self.categories = categories
-        self.questions = questions
-        self.answers = answers
-        self.game_status = game_status
-        self.game_id = game_id
+    game_status: str
+    game_id: int
 
 
 @app.route('/submit_answer', methods=['POST'])
