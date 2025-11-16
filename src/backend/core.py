@@ -1,6 +1,3 @@
-from tkinter.constants import NORMAL
-
-import flask.globals
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask.wrappers import Request
