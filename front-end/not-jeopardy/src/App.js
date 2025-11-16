@@ -208,7 +208,7 @@ function QuestionScreen({ onSubmit, question }) {
   };
 
   return (
-    <div>
+    <div className="question-screen">
       <h3>Question: {question}</h3>
       <input
         type="text"

@@ -3,7 +3,7 @@
 }
 
 body {
-  font-family: sans-serif;
+  font-family: "Anton", sans-serif;
   margin: 20px;
   padding: 0;
 }
@@ -46,16 +46,6 @@ ul {
   padding-inline-start: 20px;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: sans-serif;
-  margin: 20px;
-  padding: 0;
-}
-
 .title-screen {
     display: flex;
     flex-direction: column;
@@ -68,7 +58,16 @@ body {
 
 .button-design {
     background-color: #ffffff;
-    font-size: 50px;
+    font-size: 45px;
+    text-transform: uppercase;
+    font-family: 'Slackey';
+    padding: 20px 60px;
+    border-radius: 8px;   /* soft corners, not sharp */
+    box-shadow: 2px 6px 8px rgba(0,0,0,0.3);
+}
+
+.button-design:hover {
+    background-color: #ffd633;
 }
 
 .cat-tile {
@@ -84,6 +83,7 @@ body {
   margin-top: -1px;
   padding: 0;
   text-align: center;
+  text-transform: uppercase;
   width: 96px;
 }
 
@@ -119,4 +119,41 @@ body {
 
 .game-info {
   margin-left: 20px;
+}
+
+.question-screen {
+  background-color: #0033a0;
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.question-screen h3 {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.question-screen input {
+  font-size: 20px;
+  padding: 10px;
+  margin-top: 20px;
+  width: 300px;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+}
+
+.question-screen button {
+  margin-top: 20px;
+  font-size: 20px;
+  padding: 10px 20px;
+  background-color: #fab700; /* yellow Jeopardy button */
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.question-screen button:hover {
+  background-color: #ffd633; /* slightly brighter on hover */
 }
