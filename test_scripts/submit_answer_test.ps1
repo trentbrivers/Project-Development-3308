@@ -1,1 +1,0 @@
-Invoke-WebRequest -Uri "http://localhost:5000/submit_answer" -Method 'POST' -Body '{"question_idx": 0, "user_answer": "columbus", "username": "trentr"}' -ContentType 'application/json' -UseBasicParsing
