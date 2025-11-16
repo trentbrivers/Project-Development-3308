@@ -39,7 +39,7 @@ class PlayerAnswer:
 
 @dataclass
 class PlayerStatus:
-    answer_status: AnswerStatus
+    answer_status: str
     player_score: int
 
 
