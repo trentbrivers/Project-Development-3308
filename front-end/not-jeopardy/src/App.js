@@ -5,11 +5,11 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState('title');
   // This is the main Array of tiles for the game board. It is a 1D array representing a 6x5 grid. 
   const [tiles, setTiles] = useState(
-    Array(30).fill("$200", 0, 6)
-      .fill("$400", 6, 12)
-      .fill("$600", 12, 18)
-      .fill("$800", 18, 24)
-      .fill("$1000", 24, 30)
+    Array(30).fill("$100", 0, 6)
+      .fill("$200", 6, 12)
+      .fill("$300", 12, 18)
+      .fill("$400", 18, 24)
+      .fill("$500", 24, 30)
   );
   const [questions, setQuestions] = useState(
     Array(61).fill(null)
