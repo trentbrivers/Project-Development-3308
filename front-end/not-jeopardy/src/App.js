@@ -17,6 +17,9 @@ export default function App() {
   const [answers, setAnswers] = useState(
     Array(61).fill(null)
   );
+  const [categories, setCategories] = useState(
+    Array(6).fill(null)
+  );
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(null);
   const [status, setStatus] = useState(null);
@@ -39,6 +42,7 @@ export default function App() {
     })
     .then(data => {
       console.log('Backend response data:', data);
+      setCategories(data['categories']);
       setQuestions(data['questions']);
       setAnswers(data['answers']);
     })
@@ -96,7 +100,7 @@ export default function App() {
         <TitleScreen onStart={handleStartGame} />
       )}
       {currentScreen === 'board' && (
-        <GameBoard onSelectQuestion={handleSelectQuestion} tiles={tiles}/>
+        <GameBoard onSelectQuestion={handleSelectQuestion} tiles={tiles} categories={categories}/>
       )}
       {currentScreen === 'question' && (
         <QuestionScreen onSubmit={handleSubmitAnswer} question={questions[selected]}/>
@@ -128,7 +132,7 @@ function TitleScreen({ onStart }) {
     );
 }
 
-function GameBoard({ onSelectQuestion, tiles}) {
+function GameBoard({ onSelectQuestion, tiles, categories}) {
 
   function handleClick(i){
     if (tiles[i] === null) return;
@@ -138,12 +142,12 @@ function GameBoard({ onSelectQuestion, tiles}) {
   return (
     <>
     <div className = "board-row"> 
-    <Category value={"Category 1"}/>
-    <Category value={"Category 2"}/>
-    <Category value={"Category 3"}/>
-    <Category value={"Category 4"}/>
-    <Category value={"Category 5"}/>
-    <Category value={"Category 6"}/>
+    <Category value={categories[0]}/>
+    <Category value={categories[1]}/>
+    <Category value={categories[2]}/>
+    <Category value={categories[3]}/>
+    <Category value={categories[4]}/>
+    <Category value={categories[5]}/>
     </div>
 
     <div className = "board-row">
