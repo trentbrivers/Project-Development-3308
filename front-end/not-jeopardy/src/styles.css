@@ -6,6 +6,7 @@ body {
     font-family: "Anton", serif;
     margin: 20px;
     padding: 0;
+    background-color: #0033a0;
 }
 
 /* Headings */
@@ -36,6 +37,18 @@ ul {
     text-align: center;
 }
 
+.title-screen input {
+    border: none;
+    border-radius: 5px;
+    font-family: "Anton", serif;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: center;
+    width: 300px;
+}
+
 /* Start Game Button */
 
 .button-design {
@@ -63,14 +76,14 @@ ul {
     float: left;
     font-size: 16px;
     font-weight: bold;
-    height: 48px;
     line-height: 34px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
     text-transform: uppercase;
-    width: 96px;
+    width: 15vw;
+    height: 15vh;
 }
 
 .money-tile {
@@ -78,15 +91,15 @@ ul {
     border: 1px solid #999;
     color: #fab700;
     float: left;
-    font-size: 24px;
+    font-size: 10vh;
     font-weight: bold;
-    height: 48px;
     line-height: 34px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 96px;
+    width: 15vw;
+    height: 15vh;
 }
 
 .board-row:after {
