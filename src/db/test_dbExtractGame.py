@@ -1,5 +1,5 @@
-import dbDDL
-import dbExtractGame
+import src.db.dbDDL as dbDDL
+import src.db.dbExtractGame as dbExtractGame
 from pathlib import Path
 import sqlite3
 import unittest
@@ -124,3 +124,7 @@ class dbExtractGameTestCase(unittest.TestCase):
         self.assertEqual(trueAs, allAs, msg='Error: Category attributes do not match.')
 
         con.close()
+
+# Run Test Cases
+if __name__ == '__main__':
+    unittest.main()

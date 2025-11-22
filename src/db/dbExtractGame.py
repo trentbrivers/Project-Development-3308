@@ -3,9 +3,10 @@ import re
 import sqlite3
 import sys
 
+# Again, move these entirely to main?
 # Pass the target db and data directory as command line params
-dbName =  Path(__file__).parent.resolve().joinpath(sys.argv[1]) # notJeopardyDB.db
-dataDirName = Path(__file__).parent.resolve().joinpath('data') # data
+# dbName =  Path(__file__).parent.resolve().joinpath(sys.argv[1]) # notJeopardyDB.db
+# dataDirName = Path(__file__).parent.resolve().joinpath('data') # data
 
 def extract_game(dbPath, dataPath):
 
@@ -146,4 +147,8 @@ def extract_game(dbPath, dataPath):
     return
 
 if __name__ == '__main__':
+    # Pass the target db and data directory as command line params
+    dbName =  Path(__file__).parent.resolve().joinpath(sys.argv[1]) # notJeopardyDB.db
+    dataDirName = Path(__file__).parent.resolve().joinpath('data') # data
+
     extract_game(dbName, dataDirName)
