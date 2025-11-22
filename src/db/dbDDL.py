@@ -2,8 +2,9 @@ from pathlib import Path
 import sqlite3
 import sys
 
+# Remove this from program and place exclusively in main?
 # Pass python dbDDL.py notJeopardyDB.db to Terminal
-dbPath = Path(__file__).parent.resolve().joinpath(sys.argv[1])
+# dbPath = Path(__file__).parent.resolve().joinpath(sys.argv[1])
 
 # Cleanup actions - start w/ blank slate
 def preClean(filePath: Path):
@@ -119,5 +120,8 @@ def dbDDL(filePath: Path):
     con.close()
 
 if __name__ == '__main__':
+    # Pass python dbDDL.py notJeopardyDB.db to Terminal
+    dbPath = Path(__file__).parent.resolve().joinpath(sys.argv[1])
+    
     preClean(dbPath)
     dbDDL(dbPath)

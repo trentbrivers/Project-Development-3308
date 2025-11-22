@@ -1,8 +1,8 @@
 # Execute `PRAGMA foreign_keys = ON` for all connections; https://sqlite.org/foreignkeys.html
 
-import dbDDL
-import dbDMLStubs
-import dbExtractGame
+import src.db.dbDDL as dbDDL
+import src.db.dbDMLStubs as dbDMLStubs
+import src.db.dbExtractGame as dbExtractGame
 from pathlib import Path
 import sqlite3
 import unittest
@@ -360,3 +360,7 @@ class dbDMLStubsTestCase(unittest.TestCase):
         self.con.commit()
         ckUpdate = self.cur.execute("""SELECT * FROM PlayerAnswer;""").fetchall()
         self.assertEqual([], ckUpdate, msg='Error: Expect the GameID DELETE to CASCADE.')
+
+# Run Test Cases
+if __name__ == '__main__':
+    unittest.main()
