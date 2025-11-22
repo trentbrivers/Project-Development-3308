@@ -7,6 +7,7 @@ body {
     font-family: "Anton", serif;
     margin: 20px;
     padding: 0;
+    background-color: #0033a0;
 }
 
 /* Headings */
@@ -36,6 +37,18 @@ ul {
     text-align: center;
 }
 
+.title-screen input {
+    border: none;
+    border-radius: 5px;
+    font-family: "Anton", serif;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: center;
+    width: 300px;
+}
+
 /* Start Game Button */
 .button-design {
     background-color: #ffffff;
@@ -56,17 +69,21 @@ ul {
 /* ----------------------- */
 
 .cat-tile {
-    background: #0B0D3A;
+    background: #2650DB;
     border: 1px solid #999;
     color: #ffffff;
-    font-size: 24px;
+
+    font-size: 50px;
     text-transform: uppercase;
+    font-weight: bold;
 
     /* Center the text */
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+/*     float: left; */
+
 
     /* Equally sized tiles */
     flex: 1;

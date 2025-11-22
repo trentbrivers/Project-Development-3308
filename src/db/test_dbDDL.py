@@ -1,4 +1,4 @@
-import dbDDL
+import src.db.dbDDL as dbDDL
 from pathlib import Path
 import sqlite3
 import unittest
