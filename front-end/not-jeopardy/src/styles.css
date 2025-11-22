@@ -97,11 +97,11 @@ ul {
 
 
 .money-tile {
-    background: #0B0D3A;
+    background: #2650DB;
     border: 1px solid #999;
     color: #fab700;
     font-family: "Anton", sans-serif;
-    font-size: 32px;
+    font-size: 10vh;
 
     display: flex;
     justify-content: center;
