@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 import sqlite3
-from src.db.dbExtractGame import extract_game
+#from src.db.dbExtractGame import extract_game
 
 
 filePath = Path(__file__).parent.resolve()
@@ -49,6 +49,11 @@ def extract_questions_answers_array(dbPath: Path, dbFilename: str, tblnames: lis
 
 
 if __name__ == '__main__':
-   questions, answers = extract_questions_answers_array(filePath, 'notJeopardyDB.db', ['Question'])
-   print(questions)
-   print(answers)
+   ##questions, answers = extract_questions_answers_array(filePath, 'notJeopardyDB.db', ['Question'])
+   ##print(questions)
+   ##print(answers)
+   print_rows(filePath, 'notJeopardyDB.db', ['Question'])
+   print_rows(filePath, 'notJeopardyDB.db', ['Game'])
+   print_rows(filePath, 'notJeopardyDB.db', ['Contestant'])
+   print_rows(filePath, 'notJeopardyDB.db', ['GameQuestion'])
+   print_rows(filePath, 'notJeopardyDB.db', ['PlayerAnswer'])
