@@ -198,7 +198,7 @@ function GameBoard({ onSelectQuestion, tiles, categories, round}) {
   }
 
   return (
-    <>
+    <div className={"board-frame"}>
     <div className = "board-row"> 
     <Category value={categories[0+cat_mod]}/>
     <Category value={categories[1+cat_mod]}/>
@@ -253,7 +253,7 @@ function GameBoard({ onSelectQuestion, tiles, categories, round}) {
     <Money value={tiles[29+tile_mod]} onMoneyClick={() => handleClick(29+tile_mod)}/>  
     </div>
 
-    </>
+    </div>
   );
 }
 
@@ -337,7 +337,7 @@ function GameOver({final_score, onMenu}) {
             alt="!Jeopardy Logo"
         />
       <h1 className={"game-over-text"}>CONGRATULATIONS!</h1>
-      <p className={"score-display"}>Final Score: {final_score}</p>
+      <p className={"score-display"}>Final Score: ${final_score}</p>
       <button onClick = {handleMenu} className="button-design" >
           Main Menu 
       </button>

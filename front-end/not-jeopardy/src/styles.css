@@ -3,6 +3,7 @@
 }
 
 body {
+    background-color: #0033a0;
     font-family: "Anton", serif;
     margin: 20px;
     padding: 0;
@@ -26,7 +27,6 @@ ul {
 }
 
 /* Title Screen */
-
 .title-screen {
     align-items: center;
     background-image: linear-gradient(#0B0D3A, #4704FA, #D92E8F, #FF8A00);
@@ -50,7 +50,6 @@ ul {
 }
 
 /* Start Game Button */
-
 .button-design {
     background-color: #ffffff;
     border-radius: 8px;
@@ -70,42 +69,63 @@ ul {
 /* ----------------------- */
 
 .cat-tile {
-    background: #2650db;
+    background: #2650DB;
     border: 1px solid #999;
     color: #ffffff;
-    float: left;
+
     font-size: 50px;
-    font-weight: bold;
-    line-height: 175px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
-    text-align: center;
     text-transform: uppercase;
-    width: 15vw;
-    height: 15vh;
+    font-weight: bold;
+
+    /* Center the text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+/*     float: left; */
+
+
+    /* Equally sized tiles */
+    flex: 1;
+    min-height: 60px;
+    padding: 10px;
+
+    /* Allow wrapping */
+    white-space: normal;
+    word-wrap: break-word;
 }
+
 
 .money-tile {
-    background: #2650db;
+    background: #0B0D3A;
     border: 1px solid #999;
     color: #fab700;
-    float: left;
-    font-size: 10vh;
-    font-weight: bold;
-    line-height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
+    font-family: "Anton", sans-serif;
+    font-size: 32px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    width: 15vw;
-    height: 15vh;
+
+    /* match category tile sizing */
+    flex: 1;
+    min-height: 60px;
+    padding: 10px;
 }
 
-.board-row:after {
-    clear: both;
-    content: "";
-    display: table;
+.board-frame {
+    background-color: #4d4d4d;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 20px auto;
+}
+
+.board-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .status {
