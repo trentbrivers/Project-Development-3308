@@ -40,7 +40,7 @@ export default function App() {
   const handleStartGame = () => {
     console.log(userName);
     const postData = {"players": [userName]}
-    fetch('initialize_game', {
+    fetch('/initialize_game', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
