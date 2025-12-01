@@ -40,7 +40,7 @@ export default function App() {
   const handleStartGame = () => {
     console.log(userName);
     const postData = {"players": [userName]}
-    fetch('http://localhost:5000/initialize_game', {
+    fetch('initialize_game', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ export default function App() {
       "question_idx":selected,
       "user_answer": answer
     }
-    fetch('http://localhost:5000/submit_answer',{
+    fetch('/submit_answer',{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

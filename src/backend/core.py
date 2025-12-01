@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify
+from email.policy import default
+
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from flask.wrappers import Request
 from dataclasses import dataclass
@@ -7,7 +9,8 @@ from pathlib import Path
 from src.db.db_api import add_players, extract_questions_data, update_player_score
 
 
-app = Flask(__name__)
+build_path = Path(__file__).absolute().parent.parent.parent.joinpath('front-end/not-jeopardy/build/')
+app = Flask(__name__, static_folder=str(build_path), static_url_path='')
 CORS(app)
 
 
@@ -103,6 +106,12 @@ def submit_answer():
 @app.route('/submit_final_answer', methods=['POST'])
 def submit_final_answer():
     return handle_answer_submission(RoundType.FINAL, request)
+
+
+@app.route('/')
+def index():
+    print(build_path)
+    return send_from_directory(build_path, 'index.html')
 
 
 def handle_answer_submission(round_type: RoundType, user_request: Request):
