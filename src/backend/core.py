@@ -110,7 +110,6 @@ def submit_final_answer():
 
 @app.route('/')
 def index():
-    print(build_path)
     return send_from_directory(build_path, 'index.html')
 
 
