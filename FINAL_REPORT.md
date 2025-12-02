@@ -21,8 +21,8 @@ Upon launching the game, the user is prompted for a username and upon entering t
 
 Upon clicking start game the primarily driving function initialize game is called from db/core.py. 
 ![Start_Game_Screen.png](/img%2FStart_Game_Screen.png)
-This function queries the DataBase and constructs local arrays of questions, answers, and point values, which are passed 
-through the React Routing to the frontend as JSON arrays where they are visualizing displayed on the game board. The category and single or double jeopardy tags are encoded in the array index positions. 
+This function queries the database and constructs local arrays of questions, answers, and point values, which are passed 
+through React Routing to the frontend as JSON arrays where they are eventually used to render the updated game board. The category and single or double jeopardy tags are encoded in the array index positions. 
 
 ![Game_Board.png](/img%2FGame_Board.png)
 
@@ -31,7 +31,7 @@ and populates it for the player.
 ![Question Screen.png](/img%2FQuestion%20Screen.png)
 
 
-Upon the player entering an answer the answer is routed back to the backend portion of the code via the submit answer React route. The answer is scored and updated scores commited to the database
+Upon the player entering an answer, it's routed back to the backend portion of the code via the submit answer React route. The answer is scored and updated scores committed to the database
 and a correct/incorrect flag is returned to the frontend along with updated scores. The correct answer is displayed along with updated score to the user. 
 
 ![Answer_Correct_Screen.png](/img%2FAnswer_Correct_Screen.png)
