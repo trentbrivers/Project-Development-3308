@@ -7,12 +7,12 @@
 ### Final Status Report:
 #### Completed: 
 Contained in this repository is a simple web-hosted version of Jeopardy. The front-end was created using the React JavaScript library and pulls from a variety of CSS files to give the Jeopardy Game a retro type styling. 
-The backend of the game is written in Python and connects to a simple database created using SQLite. Communication between the front-end and back-end is conducted primarily through Flask Routing Paths using JSON data. 
-This was selected as a common communication/understanding as JSON is supported by a wide variety of programming languages and was relatively straight forward to implement. 
+The backend of the game is written in Python and connects to a simple database created using SQLite. Communication between the frontend and backend is conducted primarily through Flask Routing Paths using JSON data. 
+This was selected as a common data exchange method as JSON is supported by a wide variety of programming languages and was relatively straightforward to implement. 
 
-The game can either be accessed via the public hosting link above or running the build scripts locally in order, build_db_ps1, build_ps1, start.ps1. The build_db script creates the data base and runs an HTML extraction 
-script pulling Jeopardy Question Data from the HTML file in the /db/data directory into the DataBase. The build_ps1 scripts installs frontend dependencies and package requirements, builds the frontend nodes and activates 
-the virtual environment. The start.ps1 script starts both the backend and frontend portions of the codebase for execution. When accessing the public hosting site all of the above is processed by the hosting site. 
+The game can either be accessed via the public hosting link above or running the build scripts locally in order, build_db.ps1, build.ps1, start.ps1. The build_db script creates the database and runs an HTML extraction 
+script pulling Jeopardy Question Data from the HTML file in the /db/data directory into the database. The build.ps1 scripts installs frontend dependencies and package requirements, builds the frontend nodes and activates 
+the virtual environment. The start.ps1 script starts both the backend and frontend portions of the codebase for execution. When accessing the public hosting site, all of the above is processed by the hosting site. 
 
 Upon launching the game, the user is prompted for a username and upon entering the username is commited to the Database for score tracking, highscore tracking, and game completion.
 
