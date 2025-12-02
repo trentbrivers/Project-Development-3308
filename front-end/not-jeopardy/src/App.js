@@ -127,7 +127,7 @@ export default function App() {
         <QuestionScreen onSubmit={handleSubmitAnswer} question={questions[selected]}/>
       )}
       {currentScreen === 'answer' && (
-        <AnswerScreen onReturn={totalSelected != 30 ? totalSelected != 60 ? handleReturnToBoard:handleGameEnd:handleDouble} answer={answers[selected]} answer_status={status} player_score={score}/>
+        <AnswerScreen onReturn={totalSelected !== 30 ? totalSelected !== 60 ? handleReturnToBoard:handleGameEnd:handleDouble} answer={answers[selected]} answer_status={status} player_score={score}/>
       )}
       {currentScreen === 'double' && (
         <DoubleJeopardy onContinue={handleReturnToBoard}/>

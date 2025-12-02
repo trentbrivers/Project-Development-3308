@@ -4,6 +4,9 @@ cd $root/front-end/not-jeopardy
 # install package dependencies for frontend
 npm ci
 
+# build production code for frontend
+npm run build
+
 cd $root
 
 python -m venv .venv
