@@ -19,8 +19,10 @@ Upon launching the game, the user is prompted for a username and upon entering t
 ![Welcome_Screen.png](/img%2FWelcome_Screen.png)
 
 
-Upon clicking start game the primarily driving function initialize game is called from db/core.py. 
+Upon clicking start game the primary driving function initialize game is called from db/core.py. 
+
 ![Start_Game_Screen.png](/img%2FStart_Game_Screen.png)
+
 This function queries the database and constructs local arrays of questions, answers, and point values, which are passed 
 through React Routing to the frontend as JSON arrays where they are eventually used to render the updated game board. The category and single or double jeopardy tags are encoded in the array index positions. 
 
@@ -31,13 +33,13 @@ and populates it for the player.
 ![Question Screen.png](/img%2FQuestion%20Screen.png)
 
 
-Upon the player entering an answer, it's routed back to the backend portion of the code via the submit answer React route. The answer is scored and updated scores committed to the database
+Upon the player entering an answer, it's routed back to the backend portion of the code via the submit answer React route. The answer is scored, updated scores are committed to the database
 and a correct/incorrect flag is returned to the frontend along with updated scores. The correct answer is displayed along with updated score to the user. 
 
 ![Answer_Correct_Screen.png](/img%2FAnswer_Correct_Screen.png)
 
 
-This process continues throughout the first stage of the game (single jeopardy). Upon completing the last question of single jeoaprdy, double jeopardy is loaded from initial local arrays. The above gameplay loop continues
+This process continues throughout the first stage of the game (single jeopardy). Upon completing the last question of single jeopardy, double jeopardy is loaded from same initial local arrays and populated in the front end. The above gameplay loop continues
 until the completion of double jeopardy. 
 
 Upon the completion of double jeopardy the player is taken to the final score screen and is shown their final score with an option to return to the main menu, which returns them to the 
@@ -47,9 +49,9 @@ start game/leaderboard screen.
 
 #### In the Middle of Implementing:
 In progress currently is the implementation of Final Jeopardy. There were several roadblocks encountered that led us to selecting the current iteration as an appropriate stopping point, 
-namely the needing user input for selecting a bet amount for final jeopardy as well as adjusting the current routes/JSON array to account for the final jeopardy question and indicate that the round
-was final jeopardy. Given the scope of these changes and the time left in the semester we decided to avoid introducing potential bugs and favored shipped a functional product. Additionally, we were planning to adjust the database
-to account for multiple games worth of jeopardy questions. As constructed right now the database holds one jeopardy game HTML worth of question data, we would need to adjust the database to support handling multiple games of data and adjust the initialize game function
+namely  needing user input for selecting a bet amount for final jeopardy as well as adjusting the current routes/JSON array to account for the final jeopardy question and indicate that the round
+was final jeopardy. Given the scope of these changes and the time left in the semester we decided to avoid introducing potential bugs and favored shipping a functional product. Additionally, we were planning to adjust the database
+to account for multiple games worth of jeopardy questions. As constructed right now the database holds one HTML jeopardy game worth of question data. We would need to adjust the database to support handling multiple games of data and adjust the initialize game function
 to select a games worth of data from the database rather than pulling all of the questions in the database. Given the scope of those changes we assessed the chance of introducing bugs as high and this was also put on hold in favor of project delivery. 
 
 #### Planned Future Work: 
@@ -59,5 +61,5 @@ Currently, the database does track highscores between multiple different players
 implemented. Multiple player support was also planned as a stretch goal/feature but given the current state of the game that is several sprint iterations into the future. 
 
 #### Known Bugs/Issues:
-There are a couple no known bugs with the base implementation of the game. The leaderboard button is a stub/placeholder planned for future work and does not take the user to leaderboard. Also after completing the game and being taken to the home screen, selecting start game takes the user back to
-the blank board of the just completed game. This release is a minimum viable product and only takes the player through a single game recording their name and highscore in the database. 
+There are a couple of known bugs with the base implementation of the game. The leaderboard button is a stub/placeholder planned for future work and does not take the user to leaderboard. Also after completing the game and being taken to the home screen, selecting start game takes the user back to
+the blank board of the now completed game. This release is a minimum viable product and only takes the player through a single game recording their name and highscore in the database. 
