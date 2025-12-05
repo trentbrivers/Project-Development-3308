@@ -1,7 +1,8 @@
 # !Jeopardy 
 ## Team Members: Ebrahim Azarisooreh, RJ Barrett, Darvin Conttreras, Rachel Mertz, Trent Rivers, Megan Yeung
 ### Project Tracker Link: https://not-applicable.atlassian.net/jira/core/projects/NJ/board?filter=&groupBy=status
-### Link to Demo Video:
+### Link to Demo Video: https://cuboulder.zoom.us/rec/share/sWTNpyjtB0_hX9-QBj94T_BuZJP3xSbPD2i8hOLhrrM9zHFJXn9VqownXj_n4-pG.RwpADZI2iyHUpnXU?startTime=1764903052000
+### Passcode for Zoom Link: ^3Q$Q?iK
 ### GitHub Repo: https://github.com/trentbrivers/Project-Development-3308
 ### Public Hosting: https://not-jeopardy.onrender.com/
 ### Final Status Report:
